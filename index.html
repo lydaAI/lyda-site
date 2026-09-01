@@ -13,6 +13,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
@@ -176,7 +177,19 @@ a.satir:focus-visible{
   border-radius:2px;
 }
 
-.ad{font-weight:500;transition:color .18s ease}
+.ad{font-weight:500;transition:color .18s ease;display:flex;align-items:center;gap:.7rem}
+
+.ad i{
+  width:1.15em;
+  font-size:.95em;
+  text-align:center;
+  color:var(--acikgri);
+  transition:color .18s ease;
+  flex-shrink:0;
+}
+
+a.satir:hover .ad i,
+a.satir:focus-visible .ad i{color:var(--kirmizi)}
 .not{color:var(--acikgri);font-size:.83rem;text-align:right;flex-shrink:0}
 
 footer{
@@ -243,42 +256,42 @@ footer{
 
     <li>
       <a class="satir" href="https://youtube.com/@lydaai">
-        <span class="ad">YouTube kanalı</span>
+        <span class="ad"><i class="fa-brands fa-youtube" aria-hidden="true"></i>YouTube kanalı</span>
         <span class="not">Yeni videolar</span>
       </a>
     </li>
 
     <li>
       <a class="satir" href="https://youtube.com/playlist?list=OYNATMA_LISTESI_ID">
-        <span class="ad">ComfyUI başlangıç serisi</span>
+        <span class="ad"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i>ComfyUI başlangıç serisi</span>
         <span class="not">Sıfırdan</span>
       </a>
     </li>
 
     <li>
       <a class="satir" href="https://github.com/KULLANICI_ADIN/workflows">
-        <span class="ad">Workflow dosyaları</span>
+        <span class="ad"><i class="fa-brands fa-github" aria-hidden="true"></i>Workflow dosyaları</span>
         <span class="not">JSON indir</span>
       </a>
     </li>
 
     <li>
       <a class="satir" href="https://discord.gg/DAVET_KODU">
-        <span class="ad">Discord</span>
+        <span class="ad"><i class="fa-brands fa-discord" aria-hidden="true"></i>Discord</span>
         <span class="not">Soru sor</span>
       </a>
     </li>
 
     <li>
       <a class="satir" href="https://instagram.com/lyda.ai">
-        <span class="ad">Instagram</span>
+        <span class="ad"><i class="fa-brands fa-instagram" aria-hidden="true"></i>Instagram</span>
         <span class="not">Görseller</span>
       </a>
     </li>
 
     <li>
       <a class="satir" href="mailto:lyda@lyda.info">
-        <span class="ad">İş birliği ve sponsorluk</span>
+        <span class="ad"><i class="fa-solid fa-envelope" aria-hidden="true"></i>İş birliği ve sponsorluk</span>
         <span class="not">lyda@lyda.info</span>
       </a>
     </li>
