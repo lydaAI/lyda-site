@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lyda AI — ComfyUI'ı temelden öğrenin</title>
+<meta name="description" content="ComfyUI'ı ezber değil mantık üzerinden anlatan Türkçe kanal.">
+
+<meta property="og:title" content="Lyda AI">
+<meta property="og:description" content="ComfyUI'ı ezber değil mantık üzerinden anlatan Türkçe kanal.">
+<meta property="og:url" content="https://lyda.info">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ---- Lyda AI marka paleti ---- */
+  --siyah:  #0A0A0A;
+  --beyaz:  #FFFFFF;
+  --kirmizi:#E8332C;
+  --gri:    #2B2B2B;
+  --acikgri:#8F8F8F;
+
+  /* Arka plandaki görsellerin ne kadar görüneceği.
+     Yükseltirsen görseller belirginleşir ama metin okunaksızlaşır. */
+  --fon-perde:.84;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:var(--siyah);
+  color:var(--beyaz);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:clamp(2.5rem,8vw,5rem) 1.5rem 3rem;
+}
+
+/* ---------- Akan görsel duvarı ---------- */
+.fon{
+  position:fixed;inset:0;
+  z-index:0;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);
+}
+
+.sutun{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  width:clamp(170px,25vw,290px);
+  flex-shrink:0;
+  animation:akisYukari 70s linear infinite;
+}
+
+.sutun.ters{animation-name:akisAsagi;animation-duration:88s}
+.sutun:nth-child(3){animation-duration:78s}
+
+.sutun img{
+  width:100%;
+  display:block;
+  border-radius:6px;
+  background:var(--gri);
+}
+
+/* Görsellerin üstündeki karartma perdesi — metnin okunmasını sağlıyor */
+.perde{
+  position:fixed;inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:rgba(10,10,10,var(--fon-perde));
+}
+
+@media (max-width:640px){
+  .sutun:nth-child(3){display:none}
+}
+
+/* ---------- İçerik ---------- */
+.kakemono{width:100%;max-width:430px;position:relative;z-index:2}
+
+.tepe{display:flex;flex-direction:column;align-items:flex-start}
+
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(2.6rem,11vw,3.4rem);
+  line-height:.95;
+  letter-spacing:-.02em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+  opacity:0;
+  animation:satirIn .6s ease-out forwards;
+}
+
+/* ---------- Kablo ---------- */
+.baglantilar{
+  list-style:none;
+  margin-top:2.75rem;
+  padding-left:1.5rem;
+  position:relative;
+}
+
+.baglantilar::before{
+  content:"";
+  position:absolute;
+  left:4px;top:.15rem;bottom:1.9rem;
+  width:1px;
+  background:linear-gradient(var(--kirmizi),rgba(232,51,44,.18));
+  transform:scaleY(0);
+  transform-origin:top;
+  animation:kabloIn 1.15s cubic-bezier(.25,.8,.3,1) .25s forwards;
+}
+
+.baglantilar li{
+  position:relative;
+  opacity:0;
+  transform:translateY(6px);
+  animation:satirIn .5s ease-out forwards;
+}
+
+.baglantilar li:nth-child(1){animation-delay:.42s}
+.baglantilar li:nth-child(2){animation-delay:.56s}
+.baglantilar li:nth-child(3){animation-delay:.70s}
+.baglantilar li:nth-child(4){animation-delay:.84s}
+.baglantilar li:nth-child(5){animation-delay:.98s}
+.baglantilar li:nth-child(6){animation-delay:1.12s}
+.baglantilar li:nth-child(7){animation-delay:1.26s}
+.baglantilar li:nth-child(8){animation-delay:1.40s}
+
+.baglantilar li::before{
+  content:"";
+  position:absolute;
+  left:-1.5rem;top:1.55rem;
+  width:9px;height:9px;
+  border-radius:50%;
+  background:var(--siyah);
+  border:1px solid var(--kirmizi);
+  transition:background .18s ease;
+}
+
+.baglantilar li:hover::before,
+.baglantilar li:focus-within::before{background:var(--kirmizi)}
+
+/* ---------- Link satırı ---------- */
+a.satir{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.05rem 0;
+  border-bottom:1px solid rgba(255,255,255,.13);
+  color:var(--beyaz);
+  text-decoration:none;
+}
+
+.baglantilar li:first-child a.satir{border-top:1px solid rgba(255,255,255,.13)}
+
+a.satir:hover .ad,
+a.satir:focus-visible .ad{color:var(--kirmizi)}
+
+a.satir:focus-visible{
+  outline:2px solid var(--kirmizi);
+  outline-offset:4px;
+  border-radius:2px;
+}
+
+.ad{font-weight:500;transition:color .18s ease}
+.not{color:var(--acikgri);font-size:.83rem;text-align:right;flex-shrink:0}
+
+footer{
+  margin-top:2.5rem;
+  padding-left:1.5rem;
+  color:var(--acikgri);
+  font-size:.8rem;
+  opacity:0;
+  animation:satirIn .5s ease-out 1.5s forwards;
+}
+
+@keyframes kabloIn{to{transform:scaleY(1)}}
+@keyframes satirIn{to{opacity:1;transform:translateY(0)}}
+@keyframes akisYukari{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes akisAsagi{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  h1,footer,.baglantilar li{opacity:1;transform:none}
+  .baglantilar::before{transform:scaleY(1)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================================================
+     ARKA PLAN GÖRSELLERİ
+     gorseller/ klasörüne kendi çıktılarını at.
+     Her sütundaki liste İKİ KEZ yazılı — döngünün
+     kesintisiz olması için. Görsel değiştirirken
+     her ikisini de değiştir.
+     ================================================ -->
+<div class="fon" aria-hidden="true">
+
+  <div class="sutun">
+    <img src="gorseller/01.jpg" alt=""><img src="gorseller/02.jpg" alt=""><img src="gorseller/03.jpg" alt="">
+    <img src="gorseller/01.jpg" alt=""><img src="gorseller/02.jpg" alt=""><img src="gorseller/03.jpg" alt="">
+  </div>
+
+  <div class="sutun ters">
+    <img src="gorseller/04.jpg" alt=""><img src="gorseller/05.jpg" alt=""><img src="gorseller/06.jpg" alt="">
+    <img src="gorseller/04.jpg" alt=""><img src="gorseller/05.jpg" alt=""><img src="gorseller/06.jpg" alt="">
+  </div>
+
+  <div class="sutun">
+    <img src="gorseller/07.jpg" alt=""><img src="gorseller/08.jpg" alt=""><img src="gorseller/09.jpg" alt="">
+    <img src="gorseller/07.jpg" alt=""><img src="gorseller/08.jpg" alt=""><img src="gorseller/09.jpg" alt="">
+  </div>
+
+</div>
+<div class="perde"></div>
+
+<main class="kakemono">
+
+  <header class="tepe">
+    <h1>Lyda AI</h1>
+  </header>
+
+  <!-- ================================================
+       LİNKLER — sadece burayı düzenle.
+       ================================================ -->
+  <ul class="baglantilar">
+
+    <li>
+      <a class="satir" href="https://youtube.com/@KANAL_ADIN">
+        <span class="ad">YouTube kanalı</span>
+        <span class="not">Yeni videolar</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="satir" href="https://youtube.com/playlist?list=OYNATMA_LISTESI_ID">
+        <span class="ad">ComfyUI başlangıç serisi</span>
+        <span class="not">Sıfırdan</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="satir" href="https://github.com/KULLANICI_ADIN/workflows">
+        <span class="ad">Workflow dosyaları</span>
+        <span class="not">JSON indir</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="satir" href="https://discord.gg/DAVET_KODU">
+        <span class="ad">Discord</span>
+        <span class="not">Soru sor</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="satir" href="https://instagram.com/KULLANICI_ADIN">
+        <span class="ad">Instagram</span>
+        <span class="not">Görseller</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="satir" href="mailto:lyda@lyda.info">
+        <span class="ad">İş birliği ve sponsorluk</span>
+        <span class="not">lyda@lyda.info</span>
+      </a>
+    </li>
+
+  </ul>
+
+  <footer>lyda.info</footer>
+
+</main>
+</body>
+</html>
