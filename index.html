@@ -113,7 +113,15 @@ body{
 /* ---------- İçerik ---------- */
 .kakemono{width:100%;max-width:430px;position:relative;z-index:2}
 
-.tepe{display:flex;flex-direction:column;align-items:flex-start}
+.tepe{display:flex;flex-direction:column;align-items:flex-start;gap:.9rem}
+
+.tanim{
+  color:var(--acikgri);
+  font-size:.95rem;
+  max-width:34ch;
+  opacity:0;
+  animation:satirIn .5s ease-out .18s forwards;
+}
 
 h1{
   font-family:"Fraunces",Georgia,serif;
@@ -343,7 +351,7 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  h1,footer,.baglantilar li,.sosyal{opacity:1;transform:none}
+  h1,.tanim,footer,.baglantilar li,.sosyal{opacity:1;transform:none}
   .baglantilar::before{transform:scaleY(1)}
 }
 </style>
@@ -382,6 +390,7 @@ footer{
 
   <header class="tepe">
     <h1>Lyda AI</h1>
+    <p class="tanim">Türkçe yapay zeka rehberleri — ComfyUI ve ötesi.</p>
   </header>
 
   <!-- ================================================
