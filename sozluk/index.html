@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ComfyUI Sözlüğü — Lyda AI</title>
+<meta name="description" content="ComfyUI ve görsel üretimde geçen terimlerin Türkçe karşılıkları: CFG, VAE, LoRA, sampler, latent, quantization ve daha fazlası.">
+
+<meta property="og:site_name" content="Lyda AI">
+<meta property="og:title" content="ComfyUI Sözlüğü">
+<meta property="og:description" content="ComfyUI ve görsel üretimde geçen terimlerin Türkçe karşılıkları — aranabilir, tek sayfa.">
+<meta property="og:url" content="https://lyda.info/sozluk/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:image" content="https://lyda.info/paylasim.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lyda.info/paylasim.png">
+<meta name="theme-color" content="#E8332C">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --siyah:  #0A0A0A;
+  --beyaz:  #FFFFFF;
+  --kirmizi:#E8332C;
+  --gri:    #2B2B2B;
+  --acikgri:#8F8F8F;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+a,button{cursor:pointer}
+
+body{
+  background:var(--siyah);
+  color:var(--beyaz);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  padding:clamp(2rem,6vw,4rem) 1.5rem 5rem;
+}
+
+.sayfa{max-width:720px;margin:0 auto}
+
+/* ---------- Üst ---------- */
+.geri{
+  display:inline-block;
+  color:var(--acikgri);
+  text-decoration:none;
+  font-size:.85rem;
+  margin-bottom:1.6rem;
+  transition:color .18s ease;
+}
+.geri:hover,.geri:focus-visible{color:var(--kirmizi)}
+
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(2.2rem,8vw,3rem);
+  line-height:1;
+  letter-spacing:-.02em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+}
+
+.giris{
+  color:var(--acikgri);
+  margin-top:.9rem;
+  max-width:52ch;
+  font-size:.95rem;
+}
+
+/* ---------- Arama ve süzme ---------- */
+.araclar{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:var(--siyah);
+  padding:1.6rem 0 1rem;
+  margin-top:1.8rem;
+}
+
+.arama-kutu{position:relative}
+
+#arama{
+  width:100%;
+  background:var(--gri);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:6px;
+  color:var(--beyaz);
+  font:inherit;
+  font-size:.95rem;
+  padding:.75rem 2.6rem .75rem .9rem;
+  transition:border-color .18s ease;
+}
+
+#arama::placeholder{color:var(--acikgri)}
+#arama:focus{outline:none;border-color:var(--kirmizi)}
+
+#temizle{
+  position:absolute;
+  right:.5rem;top:50%;
+  transform:translateY(-50%);
+  background:none;border:0;
+  color:var(--acikgri);
+  font-size:1.1rem;
+  line-height:1;
+  padding:.35rem .5rem;
+  display:none;
+}
+#temizle:hover{color:var(--kirmizi)}
+
+.etiketler{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+  margin-top:.8rem;
+}
+
+.etiket{
+  background:none;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:100px;
+  color:var(--acikgri);
+  font:inherit;
+  font-size:.8rem;
+  padding:.3rem .8rem;
+  transition:color .18s ease,border-color .18s ease;
+}
+
+.etiket:hover{color:var(--beyaz);border-color:rgba(255,255,255,.4)}
+
+.etiket[aria-pressed="true"]{
+  color:var(--siyah);
+  background:var(--kirmizi);
+  border-color:var(--kirmizi);
+}
+
+/* ---------- Bölümler ---------- */
+.bolum{margin-top:2.6rem}
+
+.bolum-baslik{
+  color:var(--kirmizi);
+  font-size:.78rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  padding-bottom:.6rem;
+  border-bottom:1px solid rgba(232,51,44,.35);
+  margin-bottom:.4rem;
+}
+
+/* ---------- Terimler ---------- */
+.terim{
+  padding:1.1rem 0 1.1rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  border-left:2px solid transparent;
+  transition:border-left-color .18s ease;
+}
+
+.terim:hover{border-left-color:var(--kirmizi)}
+
+.terim h3{
+  font-size:1rem;
+  font-weight:500;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:.55rem;
+}
+
+.ingilizce{
+  color:var(--acikgri);
+  font-size:.82rem;
+  font-weight:400;
+}
+
+.terim p{
+  color:var(--acikgri);
+  font-size:.93rem;
+  margin-top:.35rem;
+}
+
+.terim p strong{color:var(--beyaz);font-weight:500}
+
+.terim code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.86em;
+  background:var(--gri);
+  border-radius:3px;
+  padding:.1em .35em;
+  color:var(--beyaz);
+}
+
+/* ---------- Sonuç yok ---------- */
+#bos{
+  display:none;
+  color:var(--acikgri);
+  padding:2.5rem 0;
+  font-size:.95rem;
+}
+
+.bolum.gizli,.terim.gizli{display:none}
+
+footer{
+  margin-top:4rem;
+  padding-top:1.6rem;
+  border-top:1px solid rgba(255,255,255,.1);
+  color:var(--acikgri);
+  font-size:.82rem;
+}
+
+footer a{color:var(--acikgri);transition:color .18s ease}
+footer a:hover{color:var(--kirmizi)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+<main class="sayfa">
+
+  <a class="geri" href="/">← lyda.info</a>
+
+  <h1>ComfyUI Sözlüğü</h1>
+  <p class="giris">Görsel üretirken karşına çıkan terimler, ne işe yaradıklarıyla birlikte. Ezberlemen gereken bir liste değil; takıldığında bakman için.</p>
+
+  <div class="araclar">
+    <div class="arama-kutu">
+      <input id="arama" type="search" placeholder="Terim ara — cfg, lora, latent…" autocomplete="off" aria-label="Terim ara">
+      <button id="temizle" type="button" aria-label="Aramayı temizle">×</button>
+    </div>
+    <div class="etiketler" role="group" aria-label="Kategoriye göre süz">
+      <button class="etiket" type="button" data-kategori="hepsi" aria-pressed="true">Hepsi</button>
+      <button class="etiket" type="button" data-kategori="temel" aria-pressed="false">Temel</button>
+      <button class="etiket" type="button" data-kategori="ksampler" aria-pressed="false">Üretim ayarları</button>
+      <button class="etiket" type="button" data-kategori="model" aria-pressed="false">Model ve dosya</button>
+      <button class="etiket" type="button" data-kategori="kontrol" aria-pressed="false">Kontrol ve eklenti</button>
+      <button class="etiket" type="button" data-kategori="teknik" aria-pressed="false">Teknikler</button>
+      <button class="etiket" type="button" data-kategori="arayuz" aria-pressed="false">Arayüz</button>
+    </div>
+  </div>
+
+  <p id="bos">Bu terim listede yok. Başka bir kelimeyle dene, ya da eklenmesini istiyorsan <a href="mailto:lyda@lyda.info">yaz</a>.</p>
+
+  <!-- ============ TEMEL ============ -->
+  <section class="bolum" data-kategori="temel">
+    <h2 class="bolum-baslik">Temel kavramlar</h2>
+
+    <article class="terim">
+      <h3>Difüzyon <span class="ingilizce">diffusion</span></h3>
+      <p>Görsel üretiminin temeli. Model, rastgele gürültüyle başlar ve her adımda gürültünün bir kısmını temizleyerek görsele yaklaşır. Yani model görsel <strong>çizmiyor</strong>, gürültünün içinden görseli <strong>ortaya çıkarıyor</strong>.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Latent <span class="ingilizce">latent space</span></h3>
+      <p>Modelin üzerinde çalıştığı sıkıştırılmış temsil. 1024×1024 bir görsel latent alanda 128×128 olarak tutulur — her kenar 8 kat küçük. Üretim burada olur, piksele ancak en sonda dönülür. Bellek tasarrufunun sebebi bu.</p>
+    </article>
+
+    <article class="terim">
+      <h3>VAE</h3>
+      <p>Latent ile piksel arasında çeviri yapan parça. Üretim bitince latent'i gerçek görsele <strong>çözer</strong> (decode), img2img'de ise gelen görseli latent'e <strong>kodlar</strong> (encode). Yanlış VAE kullanırsan görsel solgun, bulanık veya renkleri kaymış çıkar.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Text Encoder <span class="ingilizce">CLIP, T5</span></h3>
+      <p>Yazdığın prompt'u modelin anlayacağı sayı dizisine çeviren parça. SD modellerinde CLIP, Flux gibi yeni modellerde CLIP ve T5 birlikte kullanılır. Prompt'un nasıl yorumlandığı büyük ölçüde buna bağlı.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Difüzyon modeli <span class="ingilizce">UNet, diffusion model</span></h3>
+      <p>Asıl işi yapan ağırlık dosyası — gürültüyü adım adım temizleyen kısım. Checkpoint dediğimiz dosya genelde bunu, VAE'yi ve text encoder'ı bir arada taşır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Prompt ve negatif prompt</h3>
+      <p>Prompt istediğini, negatif prompt istemediğini tarif eder. Önemli ayrıntı: negatif prompt ancak <code>CFG</code> 1'den büyükken çalışır. Turbo modellerde CFG 1 olduğu için negatif prompt yazmanın hiçbir etkisi olmaz.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Token</h3>
+      <p>Prompt'un parçalara ayrılmış hali — kabaca kelime ya da kelime parçası. CLIP tek seferde 77 token işler; uzun prompt'lar parçalara bölünür ve sondaki kelimeler başlangıçtakiler kadar etkili olmaz.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Embedding <span class="ingilizce">textual inversion</span></h3>
+      <p>Modele yeni bir kelime öğretme yöntemi. Birkaç kilobaytlık dosya, prompt'ta tek bir kelimeyle çağrılır. Model ağırlıklarını değiştirmez, sadece yeni bir "anlam" ekler.</p>
+    </article>
+  </section>
+
+  <!-- ============ ÜRETİM AYARLARI ============ -->
+  <section class="bolum" data-kategori="ksampler">
+    <h2 class="bolum-baslik">Üretim ayarları — KSampler</h2>
+
+    <article class="terim">
+      <h3>Steps <span class="ingilizce">adım sayısı</span></h3>
+      <p>Gürültünün kaç adımda temizleneceği. Az adım bulanık ve yarım kalmış sonuç verir, çok adım bir noktadan sonra hiçbir şey eklemez, sadece süreyi uzatır. Normal modellerde 20-30, turbo modellerde 4-8 adım yeterli.</p>
+    </article>
+
+    <article class="terim">
+      <h3>CFG <span class="ingilizce">classifier-free guidance</span></h3>
+      <p>Modelin prompt'a ne kadar sıkı bağlı kalacağı. Düşük değer serbest ve yumuşak, yüksek değer prompt'a sadık ama sert ve yanmış görseller üretir. 6-8 arası çoğu model için güvenli. Turbo/distilled modellerde <strong>1</strong> olmalı.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Sampler</h3>
+      <p>Gürültüyü temizleme algoritması. Euler basit ve hızlı, DPM++ 2M dengeli, ancestral olanlar (sonunda <code>a</code> olanlar) her adımda yeni gürültü ekler — o yüzden adım sayısını değiştirdiğinde sonuç tamamen değişir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Scheduler</h3>
+      <p>Gürültünün adımlar boyunca <strong>nasıl dağıtılacağı</strong>. Sampler nasıl temizleyeceğini, scheduler ne kadarını ne zaman temizleyeceğini belirler. <code>karras</code> az adımda iyi sonuç verir, <code>normal</code> standarttır, <code>sgm_uniform</code> bazı yeni modellerin istediğidir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Seed</h3>
+      <p>Başlangıç gürültüsünü belirleyen sayı. Aynı seed, aynı ayarlar ve aynı prompt her zaman aynı görseli üretir. Bir ayarın etkisini test ederken seed'i sabitlemek şart — yoksa neyin ne yaptığını ayırt edemezsin.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Denoise</h3>
+      <p>Mevcut latent'in ne kadarının silineceği. <code>1.0</code> her şeyi siler, sıfırdan üretim demektir. img2img'de <code>0.4</code> gibi bir değer orijinalin kompozisyonunu korur, sadece üstünü yeniden boyar. Düşürdükçe kaynağa daha sadık kalır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>batch_size ve batch count</h3>
+      <p>Karıştırılan iki ayar. <strong>batch_size</strong> aynı anda kaç görselin üretileceği — hızlıdır ama VRAM'i doğrudan katlar. <strong>batch count</strong> işin kaç kez tekrarlanacağı — sırayla çalışır, ek bellek istemez. VRAM'in azsa ikincisini kullan.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Sigma</h3>
+      <p>Her adımdaki gürültü miktarının teknik adı. Scheduler aslında bir sigma listesi üretir; ileri seviye workflow'larda bu listeyi elle bölüp iki farklı sampler'a dağıtmak mümkün.</p>
+    </article>
+  </section>
+
+  <!-- ============ MODEL VE DOSYA ============ -->
+  <section class="bolum" data-kategori="model">
+    <h2 class="bolum-baslik">Model ve dosya biçimleri</h2>
+
+    <article class="terim">
+      <h3>Checkpoint</h3>
+      <p>Eğitilmiş modelin tam hali. Genelde difüzyon modeli, VAE ve text encoder'ı bir arada taşır — bu yüzden tek dosyayla üretim yapabilirsin. Flux gibi modellerde bu parçalar ayrı dosyalar halinde gelir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>safetensors</h3>
+      <p>Modellerin güvenli dosya biçimi. Eski <code>.ckpt</code> biçimi Python'un pickle yapısını kullanır ve açıldığında kod çalıştırabilir — yani zararlı bir dosya bilgisayarına bulaşabilir. safetensors sadece veri taşır. <strong>Her zaman bunu tercih et.</strong></p>
+    </article>
+
+    <article class="terim">
+      <h3>GGUF</h3>
+      <p>Önce dil modelleri için geliştirilen, sonra görsel modellere de uyarlanan sıkıştırılmış biçim. Aynı modelin çok daha az VRAM isteyen hali. Karşılığında bir miktar kalite kaybı ve genelde daha yavaş çalışma var.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Quantization <span class="ingilizce">niceleme</span></h3>
+      <p>Model ağırlıklarını daha az hassasiyetle saklama. <code>Q8</code> orijinale çok yakın, <code>Q4</code> yarı yarıya küçük ama kalite farkı görünür hale gelir. Ekran kartın yetmiyorsa modeli küçültmek yerine quantize edilmiş halini kullanmak daha mantıklı.</p>
+    </article>
+
+    <article class="terim">
+      <h3>fp16, fp8, bf16</h3>
+      <p>Ağırlıkların sayı hassasiyeti. <code>fp16</code> standarttır. <code>fp8</code> yarı yer kaplar ve yeni kartlarda hızlıdır ama her modelde temiz çalışmaz. <code>bf16</code> fp16 ile aynı boyutta, geniş aralıklı değerlerde daha kararlıdır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Turbo ve distilled modeller</h3>
+      <p>4-8 adımda sonuç veren hızlandırılmış modeller. Hızın sebebi <strong>guidance distillation</strong>: normal model her adımda iki hesap yapar (prompt'lu ve prompt'suz), turbo model bunu tek hesaba indirmiştir. Bu yüzden CFG ayarı işlevsizdir, 1'de bırakılır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Model merge <span class="ingilizce">birleştirme</span></h3>
+      <p>İki modelin ağırlıklarını belirli oranlarda karıştırarak yeni bir model üretmek. Yeni bilgi eklemez, var olan iki modelin arasında bir yerde durur. Civitai'deki modellerin çoğu böyle üretilmiştir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Pruned ve EMA</h3>
+      <p>Model dosyasındaki fazlalıkların atılmış hali. <code>pruned</code> eğitim için gereken verileri çıkarır, dosya küçülür, üretim kalitesi değişmez. <code>EMA-only</code> da benzer şekilde sadece üretim için gereken ağırlıkları tutar.</p>
+    </article>
+  </section>
+
+  <!-- ============ KONTROL VE EKLENTİ ============ -->
+  <section class="bolum" data-kategori="kontrol">
+    <h2 class="bolum-baslik">Kontrol ve eklentiler</h2>
+
+    <article class="terim">
+      <h3>LoRA <span class="ingilizce">low-rank adaptation</span></h3>
+      <p>Modelin tamamını değil, küçük bir fark katmanını eğitmek. Birkaç yüz megabaytlık dosya, gigabaytlarca modelin davranışını değiştirir. Bir karakteri, stili veya kavramı öğretmenin en pratik yolu. Birden fazlası aynı anda kullanılabilir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>LoRA strength <span class="ingilizce">güç</span></h3>
+      <p>LoRA'nın ne kadar baskın olacağı. <code>1.0</code> varsayılandır ama her LoRA farklı eğitilmiştir — bazısı <code>0.6</code>'da doğru çalışır, bazısı <code>1.2</code> ister. Görsel bozuluyor ya da aşırı doygunlaşıyorsa ilk düşüreceğin ayar budur.</p>
+    </article>
+
+    <article class="terim">
+      <h3>ControlNet</h3>
+      <p>Görselin <strong>yapısını</strong> dışarıdan dayatma. Bir pozu, derinlik haritasını veya kenar çizgilerini verirsin, model içeriği ona uydurarak üretir. Kompozisyonu prompt'la anlatmaya çalışmaktan çok daha kesin sonuç verir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>IPAdapter</h3>
+      <p>Prompt yerine <strong>görsel</strong> vermek. Bir referans görselin stilini veya içindeki yüzü yeni üretime taşır. ControlNet yapıyı kopyalar, IPAdapter görünümü kopyalar — ikisi sık sık birlikte kullanılır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Custom node <span class="ingilizce">özel düğüm</span></h3>
+      <p>ComfyUI'a sonradan eklenen düğümler. Topluluk tarafından yazılırlar ve çoğu işi onlar yapar. Dezavantajı: biri bozulduğunda ComfyUI açılmayabilir, ve başkasının workflow'unu açtığında eksik düğümler kırmızı görünür.</p>
+    </article>
+
+    <article class="terim">
+      <h3>ComfyUI Manager</h3>
+      <p>Custom node'ları kurup güncelleyen eklenti. Eksik düğümleri otomatik bulup kurma özelliği var — başkasının workflow'unu çalıştırmanın en pratik yolu. Pratikte ilk kurulması gereken şey.</p>
+    </article>
+  </section>
+
+  <!-- ============ TEKNİKLER ============ -->
+  <section class="bolum" data-kategori="teknik">
+    <h2 class="bolum-baslik">Teknikler</h2>
+
+    <article class="terim">
+      <h3>img2img</h3>
+      <p>Sıfırdan gürültü yerine mevcut bir görselden başlamak. Görsel latent'e çevrilir, <code>denoise</code> kadarı silinir, kalanın üstüne yeniden üretilir. Kompozisyonu koruyup stili değiştirmenin yolu.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Inpainting</h3>
+      <p>Görselin sadece maskelediğin kısmını yeniden üretmek. Fazlalık silmek, bir nesneyi değiştirmek veya bozuk bir eli düzeltmek için. Maskenin kenarını biraz yumuşatmak geçişin belli olmasını engeller.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Outpainting</h3>
+      <p>Görselin dışına doğru üretmek — kadrajı genişletmek. Teknik olarak inpainting'in aynısıdır, sadece maske tuvalin boş kalan kenarlarıdır.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Upscale <span class="ingilizce">büyütme</span></h3>
+      <p>İki ayrı yöntem var. <strong>Model tabanlı</strong> büyütme (ESRGAN gibi) hızlıdır, var olanı keskinleştirir. <strong>Latent büyütme + yeniden üretim</strong> yavaştır ama yeni detay ekler — hires fix dediğimiz şey budur.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Hires fix</h3>
+      <p>Önce küçük üret, sonra büyüt ve düşük denoise ile tekrar üret. Doğrudan büyük boyutta üretmeye göre hem daha hızlı hem de anatomi bozulmalarını azaltır. Modeller eğitildikleri çözünürlükte en iyi çalışır, mantık bu.</p>
+    </article>
+
+    <article class="terim">
+      <h3>FaceDetailer</h3>
+      <p>Görseldeki yüzü otomatik bulup o bölgeyi ayrıca, yüksek çözünürlükte yeniden üreten düğüm. Uzaktan çekilmiş kadrajlarda yüzün dağılması sorununun standart çözümü. Impact Pack ile gelir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Tiling <span class="ingilizce">parçalı işleme</span></h3>
+      <p>Büyük görseli parçalara bölüp sırayla işlemek. VRAM'i aşan boyutları mümkün kılar. Tiled VAE aynı mantığı çözme aşamasına uygular — büyük görsellerde bellek hatası alıyorsan ilk deneyeceğin şey.</p>
+    </article>
+  </section>
+
+  <!-- ============ ARAYÜZ ============ -->
+  <section class="bolum" data-kategori="arayuz">
+    <h2 class="bolum-baslik">ComfyUI arayüzü</h2>
+
+    <article class="terim">
+      <h3>Node <span class="ingilizce">düğüm</span></h3>
+      <p>Tek bir iş yapan kutu. Solundaki girişlerden veri alır, sağındaki çıkışlardan verir. Renkler tip belirtir — aynı renk olmayan iki ucu birbirine bağlayamazsın, bu bir hata değil koruma.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Workflow <span class="ingilizce">iş akışı</span></h3>
+      <p>Bağlanmış düğümlerin tamamı. <code>.json</code> olarak kaydedilir. ComfyUI ürettiği PNG'nin içine workflow'u gömer — o görseli tuvale sürüklediğinde akış olduğu gibi geri gelir.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Queue <span class="ingilizce">kuyruk</span></h3>
+      <p>Çalıştırma sırası. Birden fazla iş ekleyip arka arkaya çalıştırabilirsin. ComfyUI değişmeyen düğümlerin sonucunu saklar — sadece bir ayarı değiştirdiysen baştan değil, o noktadan devam eder.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Bypass ve Mute</h3>
+      <p>İkisi de düğümü devre dışı bırakır ama farklı şekilde. <strong>Bypass</strong> (Ctrl+B) veriyi düğümün içinden geçirir, akış devam eder — LoRA'yı geçici kapatmak için. <strong>Mute</strong> (Ctrl+M) akışı tamamen keser, o koldan sonrası çalışmaz.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Reroute</h3>
+      <p>Kabloyu yönlendirmek için kullanılan boş düğüm. İşleve etkisi yok, sadece karmaşık akışlarda kabloların birbirine dolanmasını engeller.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Primitive</h3>
+      <p>Bir değeri birden fazla düğüme aynı anda besleyen düğüm. Tek bir seed'i veya adım sayısını birkaç yere birden bağlamak için — değeri tek yerden değiştirirsin.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Preview ve Save Image</h3>
+      <p><strong>Preview</strong> sonucu gösterir ama diske yazmaz, geçici klasörde kalır. <strong>Save Image</strong> output klasörüne kaydeder. Deneme yaparken Preview kullan, yoksa klasörün yüzlerce denemeyle dolar.</p>
+    </article>
+
+    <article class="terim">
+      <h3>Kırmızı düğüm</h3>
+      <p>Workflow açtığında kırmızı görünen düğümler kurulu olmayan custom node'lardır. Manager'daki "Install Missing Custom Nodes" bunları bulup kurar. Kurulumdan sonra ComfyUI'ı yeniden başlatman gerekir.</p>
+    </article>
+  </section>
+
+  <footer>
+    Eksik gördüğün bir terim varsa <a href="mailto:lyda@lyda.info">lyda@lyda.info</a> adresine yaz, eklerim.<br>
+    <a href="/">lyda.info</a>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  var arama = document.getElementById("arama");
+  var temizle = document.getElementById("temizle");
+  var bos = document.getElementById("bos");
+  var bolumler = Array.prototype.slice.call(document.querySelectorAll(".bolum"));
+  var etiketler = Array.prototype.slice.call(document.querySelectorAll(".etiket"));
+  var secili = "hepsi";
+
+  // Arama için her terimin metnini bir kez hazırla
+  var terimler = [];
+  bolumler.forEach(function (bolum) {
+    Array.prototype.forEach.call(bolum.querySelectorAll(".terim"), function (el) {
+      terimler.push({
+        el: el,
+        bolum: bolum,
+        metin: el.textContent.toLocaleLowerCase("tr")
+      });
+    });
+  });
+
+  function suz() {
+    var sorgu = arama.value.trim().toLocaleLowerCase("tr");
+    temizle.style.display = sorgu ? "block" : "none";
+
+    var bulunan = 0;
+
+    terimler.forEach(function (t) {
+      var kategoriUyar = secili === "hepsi" || t.bolum.dataset.kategori === secili;
+      var metinUyar = !sorgu || t.metin.indexOf(sorgu) !== -1;
+      var goster = kategoriUyar && metinUyar;
+      t.el.classList.toggle("gizli", !goster);
+      if (goster) bulunan++;
+    });
+
+    bolumler.forEach(function (bolum) {
+      var acik = bolum.querySelectorAll(".terim:not(.gizli)").length > 0;
+      bolum.classList.toggle("gizli", !acik);
+    });
+
+    bos.style.display = bulunan ? "none" : "block";
+  }
+
+  arama.addEventListener("input", suz);
+
+  temizle.addEventListener("click", function () {
+    arama.value = "";
+    arama.focus();
+    suz();
+  });
+
+  etiketler.forEach(function (etiket) {
+    etiket.addEventListener("click", function () {
+      secili = etiket.dataset.kategori;
+      etiketler.forEach(function (e) {
+        e.setAttribute("aria-pressed", e === etiket ? "true" : "false");
+      });
+      suz();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
