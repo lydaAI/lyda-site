@@ -66,6 +66,21 @@ body{
   padding:clamp(2.5rem,8vw,5rem) 1.5rem 3rem;
 }
 
+/* ---------- İki sütunlu düzen ---------- */
+.duzen{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:clamp(2.5rem,6vw,5rem);
+  width:100%;
+}
+
+@media (max-width:860px){
+  .duzen{flex-direction:column;align-items:center;gap:3.5rem}
+}
+
 /* ---------- Akan görsel duvarı ---------- */
 .fon{
   position:fixed;inset:0;
@@ -90,6 +105,8 @@ body{
 
 .sutun.ters{animation-name:akisAsagi;animation-duration:88s}
 .sutun:nth-child(3){animation-duration:78s}
+.sutun:nth-child(4){animation-duration:95s}
+.sutun:nth-child(5){animation-duration:82s}
 
 .sutun img{
   width:100%;
@@ -103,7 +120,18 @@ body{
   position:fixed;inset:0;
   z-index:1;
   pointer-events:none;
-  background:rgba(10,10,10,var(--fon-perde));
+  background:linear-gradient(90deg,
+    rgba(10,10,10,var(--fon-perde)) 0%,
+    rgba(10,10,10,calc(var(--fon-perde) + .14)) 20%,
+    rgba(10,10,10,calc(var(--fon-perde) + .14)) 80%,
+    rgba(10,10,10,var(--fon-perde)) 100%);
+}
+
+.sutun.genis{display:none}
+
+/* Geniş ekranda duvar boş kalmasın */
+@media (min-width:1100px){
+  .sutun.genis{display:flex}
 }
 
 @media (max-width:640px){
@@ -344,6 +372,92 @@ footer{
 
 .sosyal a:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
 
+/* ---------- Rehber sütunu ---------- */
+.rehber{
+  width:100%;
+  max-width:360px;
+  flex-shrink:0;
+  opacity:0;
+  animation:satirIn .6s ease-out .55s forwards;
+}
+
+@media (max-width:860px){
+  .rehber{max-width:430px}
+}
+
+.rehber h2{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:1.6rem;
+  line-height:1.1;
+  letter-spacing:-.01em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+}
+
+.rehber-giris{
+  color:var(--acikgri);
+  font-size:.88rem;
+  margin-top:.5rem;
+  max-width:36ch;
+}
+
+.bolumler{
+  list-style:none;
+  margin-top:1.6rem;
+  counter-reset:bolum;
+}
+
+.bolumler li{counter-increment:bolum}
+
+.bolumler a,
+.bolumler .kilitli{
+  display:grid;
+  grid-template-columns:2rem 1fr;
+  gap:.1rem .7rem;
+  padding:.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  text-decoration:none;
+  color:var(--beyaz);
+}
+
+.bolumler li:first-child a,
+.bolumler li:first-child .kilitli{border-top:1px solid rgba(255,255,255,.1)}
+
+/* Sıra numarası */
+.bolumler a::before,
+.bolumler .kilitli::before{
+  content:counter(bolum,decimal-leading-zero);
+  grid-row:span 2;
+  font-size:.78rem;
+  color:var(--kirmizi);
+  padding-top:.18rem;
+  transition:color .18s ease;
+}
+
+.bolumler .ad-bolum{font-size:.93rem;font-weight:500;transition:color .18s ease}
+.bolumler .alt-bolum{font-size:.8rem;color:var(--acikgri)}
+
+.bolumler a:hover .ad-bolum,
+.bolumler a:focus-visible .ad-bolum{color:var(--kirmizi)}
+
+.bolumler a:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px;border-radius:2px}
+
+/* Henüz yayında olmayan bölümler — tıklanamaz */
+.bolumler .kilitli{cursor:default}
+.bolumler .kilitli::before{color:rgba(232,51,44,.4)}
+.bolumler .kilitli .ad-bolum{color:var(--acikgri);font-weight:400}
+.bolumler .kilitli .alt-bolum{color:#5E5E5E}
+
+.rozet{
+  font-size:.7rem;
+  color:#5E5E5E;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:100px;
+  padding:.05rem .5rem;
+  margin-left:.45rem;
+  white-space:nowrap;
+}
+
 @keyframes kabloIn{to{transform:scaleY(1)}}
 @keyframes satirIn{to{opacity:1;transform:translateY(0)}}
 @keyframes akisYukari{from{transform:translateY(0)}to{transform:translateY(-50%)}}
@@ -351,7 +465,7 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  h1,.tanim,footer,.baglantilar li,.sosyal{opacity:1;transform:none}
+  h1,.tanim,footer,.baglantilar li,.sosyal,.rehber{opacity:1;transform:none}
   .baglantilar::before{transform:scaleY(1)}
 }
 </style>
@@ -383,8 +497,20 @@ footer{
     <img src="gorseller/07.jpg" alt=""><img src="gorseller/08.jpg" alt=""><img src="gorseller/09.jpg" alt="">
   </div>
 
+  <div class="sutun genis ters">
+    <img src="gorseller/02.jpg" alt=""><img src="gorseller/06.jpg" alt=""><img src="gorseller/09.jpg" alt="">
+    <img src="gorseller/02.jpg" alt=""><img src="gorseller/06.jpg" alt=""><img src="gorseller/09.jpg" alt="">
+  </div>
+
+  <div class="sutun genis">
+    <img src="gorseller/05.jpg" alt=""><img src="gorseller/01.jpg" alt=""><img src="gorseller/08.jpg" alt="">
+    <img src="gorseller/05.jpg" alt=""><img src="gorseller/01.jpg" alt=""><img src="gorseller/08.jpg" alt="">
+  </div>
+
 </div>
 <div class="perde"></div>
+
+<div class="duzen">
 
 <main class="kakemono">
 
@@ -470,6 +596,66 @@ footer{
   </footer>
 
 </main>
+
+<!-- ================================================
+     REHBER SÜTUNU
+     Bölüm yayına girince <span class="kilitli"> etiketini
+     <a href="..."> ile değiştir, rozeti sil.
+     ================================================ -->
+<aside class="rehber" aria-labelledby="rehber-baslik">
+
+  <h2 id="rehber-baslik">ComfyUI Rehberi</h2>
+  <p class="rehber-giris">Sıfırdan başlayıp kendi workflow'unu kurana kadar. Sırayla ilerlemek için tasarlandı.</p>
+
+  <ol class="bolumler">
+
+    <li>
+      <a href="/sozluk/">
+        <span class="ad-bolum">Sözlük</span>
+        <span class="alt-bolum">Takıldığında bakacağın terimler</span>
+      </a>
+    </li>
+
+    <li>
+      <span class="kilitli">
+        <span class="ad-bolum">Kurulum<span class="rozet">yakında</span></span>
+        <span class="alt-bolum">ComfyUI'ı bilgisayarına kurmak</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="kilitli">
+        <span class="ad-bolum">Arayüz ve node mantığı<span class="rozet">yakında</span></span>
+        <span class="alt-bolum">Düğümler neden böyle bağlanıyor</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="kilitli">
+        <span class="ad-bolum">İlk görselin<span class="rozet">yakında</span></span>
+        <span class="alt-bolum">Hazır workflow ile üretime başlamak</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="kilitli">
+        <span class="ad-bolum">Workflow'u sıfırdan kurmak<span class="rozet">yakında</span></span>
+        <span class="alt-bolum">Her düğümü kendin bağlayarak</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="kilitli">
+        <span class="ad-bolum">KSampler ayarları<span class="rozet">yakında</span></span>
+        <span class="alt-bolum">Steps, CFG, sampler, seed, denoise</span>
+      </span>
+    </li>
+
+  </ol>
+
+</aside>
+
+</div>
 
 <script>
 document.querySelectorAll("button.ac").forEach(function (dugme) {
