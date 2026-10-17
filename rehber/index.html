@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ComfyUI Rehberi — Lyda AI</title>
-<meta name="description" content="ComfyUI'ı sıfırdan öğrenmek için altı bölümlük Türkçe yol haritası: kurulum, node mantığı, ilk görsel, workflow kurmak, KSampler ayarları.">
+<meta name="description" content="ComfyUI'ı Türkçe öğrenmek için konu başlıkları: kurulum, node mantığı, model seçimi, LoRA, workflow kurmak, KSampler ayarları.">
 
 <meta property="og:site_name" content="Lyda AI">
 <meta property="og:title" content="ComfyUI Rehberi">
-<meta property="og:description" content="Sıfırdan kendi workflow'unu kurana kadar, altı bölümde. Türkçe.">
+<meta property="og:description" content="Kurulumdan kendi workflow'unu kurmaya kadar, konu başlıklarına göre. Türkçe.">
 <meta property="og:url" content="https://lyda.info/rehber/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="tr_TR">
@@ -23,161 +23,84 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/araclar/stil.css">
 
 <style>
-:root{
-  --siyah:  #0A0A0A;
-  --beyaz:  #FFFFFF;
-  --kirmizi:#E8332C;
-  --gri:    #2B2B2B;
-  --acikgri:#8F8F8F;
-  --sonuk:  #5E5E5E;
+.sayfa{max-width:760px}
+
+.durum{color:var(--sonuk);font-size:.85rem;margin-top:1rem;max-width:52ch}
+
+/* ---------- Hazır olanlar ---------- */
+.hazir-kutu{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:.7rem;
+  margin-top:2.4rem;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-
-/* ---------- Sayfalar arası geçiş ---------- */
-@view-transition{navigation:auto}
-
-::view-transition-old(root),
-::view-transition-new(root){animation-duration:.42s}
-a,button{cursor:pointer}
-
-body{
-  background:var(--siyah);
-  color:var(--beyaz);
-  font-family:"IBM Plex Sans",system-ui,sans-serif;
-  font-size:16px;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-  cursor:default;
-  padding:clamp(2rem,6vw,4rem) 1.5rem 5rem;
-}
-
-.sayfa{max-width:680px;margin:0 auto}
-
-/* ---------- Üst ---------- */
-.geri{
-  display:inline-block;
-  color:var(--acikgri);
-  text-decoration:none;
-  font-size:.85rem;
-  margin-bottom:1.8rem;
-  transition:color .18s ease;
-}
-.geri:hover,.geri:focus-visible{color:var(--kirmizi)}
-
-h1{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:clamp(2.2rem,8vw,3rem);
-  line-height:1.02;
-  letter-spacing:-.02em;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  view-transition-name:rehber-baslik;
-}
-
-.giris{
-  color:var(--acikgri);
-  margin-top:1rem;
-  max-width:50ch;
-}
-
-.durum{
-  color:var(--sonuk);
-  font-size:.85rem;
-  margin-top:1.1rem;
-  max-width:50ch;
-}
-
-/* ---------- Hazır olan: sözlük ---------- */
-.sozluk-kart{
+.hazir-kart{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:1.5rem;
-  margin-top:2.6rem;
-  padding:1.1rem 1.3rem;
+  gap:.7rem;
+  padding:.8rem .95rem;
   border:1px solid rgba(232,51,44,.4);
   border-radius:8px;
-  background:rgba(232,51,44,.05);
+  background:rgba(232,51,44,.06);
   text-decoration:none;
   color:var(--beyaz);
+  font-size:.92rem;
   transition:border-color .18s ease,background .18s ease;
 }
 
-.sozluk-kart:hover,
-.sozluk-kart:focus-visible{
-  border-color:var(--kirmizi);
-  background:rgba(232,51,44,.1);
+.hazir-kart:hover,.hazir-kart:focus-visible{border-color:var(--kirmizi);background:rgba(232,51,44,.12)}
+.hazir-kart:focus-visible{outline:2px solid var(--kirmizi);outline-offset:2px}
+.hazir-kart i{color:var(--kirmizi);font-size:1rem;width:1.2em;text-align:center;flex-shrink:0}
+
+/* ---------- Konu başlıkları ---------- */
+.konu{margin-top:3.2rem}
+
+.konu-ust{
+  padding-bottom:.6rem;
+  border-bottom:1px solid rgba(232,51,44,.3);
+  margin-bottom:1.5rem;
 }
 
-.sozluk-kart:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
-
-.sozluk-kart strong{font-weight:500;display:block}
-.sozluk-kart span{color:var(--acikgri);font-size:.85rem}
-.sozluk-ok{color:var(--kirmizi);font-size:1.1rem;flex-shrink:0}
-
-/* ---------- Yol ---------- */
-.yol{
-  list-style:none;
-  margin-top:3.4rem;
-  counter-reset:durak;
-}
-
-.durak{
-  counter-increment:durak;
-  position:relative;
-  display:grid;
-  grid-template-columns:clamp(3.4rem,10vw,4.6rem) 1fr;
-  gap:0 clamp(1rem,3vw,1.6rem);
-  padding-bottom:2.8rem;
-}
-
-/* Durakları birbirine bağlayan çizgi */
-.durak::before{
-  content:"";
-  position:absolute;
-  left:calc(clamp(3.4rem,10vw,4.6rem) / 2 - .5px);
-  top:3.4rem;
-  bottom:.4rem;
-  width:1px;
-  background:linear-gradient(rgba(232,51,44,.5),rgba(232,51,44,.12));
-}
-
-.durak:last-child::before{display:none}
-
-.sira{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:clamp(1.9rem,6vw,2.5rem);
-  line-height:1;
-  text-align:center;
+.konu-ad{
   color:var(--kirmizi);
-  font-variation-settings:"SOFT" 40,"WONK" 1;
+  font-size:.82rem;
+  font-weight:500;
 }
 
-.sira::before{content:counter(durak,decimal-leading-zero)}
+.konu-alt{color:var(--acikgri);font-size:.82rem;margin-left:.55rem}
 
-/* Yayında olmayan bölümlerde sayı içi boş */
-.durak.kilitli .sira{
-  color:transparent;
-  -webkit-text-stroke:1px rgba(232,51,44,.45);
+/* ---------- Bölüm ---------- */
+.bolum{
+  display:grid;
+  grid-template-columns:2.4rem 1fr;
+  gap:.2rem 1rem;
+  padding-bottom:2.2rem;
 }
 
-.icerik h2{
-  font-size:1.12rem;
+.bolum-ikon{
+  grid-row:span 3;
+  color:rgba(232,51,44,.5);
+  font-size:1.25rem;
+  padding-top:.2rem;
+  text-align:center;
+}
+
+.bolum h2{
+  font-size:1.08rem;
   font-weight:500;
   line-height:1.3;
   display:flex;
   flex-wrap:wrap;
   align-items:center;
   gap:.6rem;
-  padding-top:.15rem;
+  color:var(--acikgri);
 }
-
-.durak.kilitli .icerik h2{color:var(--acikgri);font-weight:400}
 
 .rozet{
   font-size:.7rem;
@@ -188,28 +111,15 @@ h1{
   white-space:nowrap;
 }
 
-.ozet{
-  color:var(--acikgri);
-  font-size:.93rem;
-  margin-top:.4rem;
-  max-width:46ch;
-}
+.ozet{color:var(--sonuk);font-size:.92rem;margin-top:.35rem;max-width:48ch}
 
-.durak.kilitli .ozet{color:var(--sonuk)}
-
-.kapsam{
-  list-style:none;
-  margin-top:.9rem;
-  display:flex;
-  flex-direction:column;
-  gap:.3rem;
-}
+.kapsam{list-style:none;margin-top:.85rem;display:flex;flex-direction:column;gap:.3rem}
 
 .kapsam li{
   position:relative;
   padding-left:1rem;
-  font-size:.87rem;
-  color:var(--acikgri);
+  font-size:.86rem;
+  color:var(--sonuk);
 }
 
 .kapsam li::before{
@@ -217,35 +127,18 @@ h1{
   position:absolute;
   left:0;top:.72em;
   width:4px;height:1px;
-  background:var(--kirmizi);
+  background:rgba(232,51,44,.5);
 }
 
-.durak.kilitli .kapsam li{color:var(--sonuk)}
-.durak.kilitli .kapsam li::before{background:rgba(232,51,44,.45)}
-
-/* ---------- Alt ---------- */
-.kapanis{
-  margin-top:1rem;
-  padding-top:2rem;
-  border-top:1px solid rgba(255,255,255,.1);
+@media (max-width:560px){
+  .bolum{grid-template-columns:1fr;gap:.3rem}
+  .bolum-ikon{grid-row:auto;text-align:left;padding-top:0}
 }
 
-.kapanis p{color:var(--acikgri);font-size:.93rem;max-width:48ch}
+.kapanis{margin-top:1rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)}
+.kapanis p{color:var(--acikgri);font-size:.93rem;max-width:50ch}
 .kapanis a{color:var(--beyaz);transition:color .18s ease}
 .kapanis a:hover{color:var(--kirmizi)}
-
-footer{
-  margin-top:3rem;
-  color:var(--sonuk);
-  font-size:.82rem;
-}
-footer a{color:var(--sonuk);transition:color .18s ease}
-footer a:hover{color:var(--kirmizi)}
-
-.komsu{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-bottom:.9rem}
-.komsu a{color:var(--acikgri);text-decoration:none;font-size:.85rem}
-
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 
@@ -255,110 +148,139 @@ footer a:hover{color:var(--kirmizi)}
   <a class="geri" href="/">← lyda.info</a>
 
   <h1>ComfyUI Rehberi</h1>
-  <p class="giris">ComfyUI'ı açtığında karşına çıkan düğüm yığını öğrenilemez görünüyor. Görünmesin — altı bölüm, sırayla. Sonunda kendi workflow'unu kendin kuruyor olacaksın.</p>
-  <p class="durum">Bölümler videolarla birlikte yayınlanıyor. Aşağıdaki sıra, serinin tamamının yol haritası.</p>
+  <p class="giris">ComfyUI'ı açtığında karşına çıkan düğüm yığını öğrenilemez görünüyor. Görünmesin. Konu konu, her birinde neyin neden öyle olduğuyla birlikte.</p>
+  <p class="durum">Bölümler videolarla birlikte yayınlanıyor. Aşağıdaki başlıklar serinin kapsamı.</p>
 
-  <a class="sozluk-kart" href="/sozluk/">
-    <span>
-      <strong>Sözlük</strong>
-      <span>45 terim — hangi bölümde olursan ol, takıldığında buraya bak</span>
-    </span>
-    <span class="sozluk-ok" aria-hidden="true">→</span>
-  </a>
+  <!-- ============ HAZIR ARAÇLAR ============ -->
+  <div class="hazir-kutu">
+    <a class="hazir-kart" href="/sozluk/">
+      <i class="fa-solid fa-book" aria-hidden="true"></i>Sözlük
+    </a>
+    <a class="hazir-kart" href="/araclar/cozunurluk/">
+      <i class="fa-solid fa-crop-simple" aria-hidden="true"></i>Çözünürlük seçici
+    </a>
+    <a class="hazir-kart" href="/araclar/model-adi/">
+      <i class="fa-solid fa-tag" aria-hidden="true"></i>Model adı çözücü
+    </a>
+    <a class="hazir-kart" href="/araclar/hatalar/">
+      <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Hata sözlüğü
+    </a>
+  </div>
 
   <!-- ================================================
-       BÖLÜMLER
-       Bölüm yayına girdiğinde: li'den "kilitli" sınıfını sil,
-       rozeti kaldır, başlığı <a href="..."> ile sar.
+       KONU BAŞLIKLARI
+       Bölüm yayına girince: rozeti kaldır, başlığı
+       <a href="..."> ile sar, .bolum-ikon rengini aç.
        ================================================ -->
-  <ol class="yol">
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>Kurulum<span class="rozet">yakında</span></h2>
-        <p class="ozet">ComfyUI'ı bilgisayarına kurmak ve ilk açılışta ne yapman gerektiği.</p>
-        <ul class="kapsam">
-          <li>Portable sürümü indirip çalıştırmak</li>
-          <li>Model klasörlerinin nerede olduğu</li>
-          <li>İlk modeli indirip doğru yere koymak</li>
-          <li>Açılmıyorsa nereye bakılır</li>
-        </ul>
-      </div>
-    </li>
+  <section class="konu">
+    <div class="konu-ust">
+      <span class="konu-ad">Başlangıç</span><span class="konu-alt">Kurmak ve arayüzü tanımak</span>
+    </div>
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>Arayüz ve node mantığı<span class="rozet">yakında</span></h2>
-        <p class="ozet">Düğümler neden böyle bağlanıyor. Burayı anlarsan gerisi ezber olmaktan çıkıyor.</p>
-        <ul class="kapsam">
-          <li>Tuvalde gezinmek, düğüm eklemek ve silmek</li>
-          <li>Giriş ve çıkış uçları, renklerin ne anlama geldiği</li>
-          <li>Yapay zeka kullanmadan kurulan basit bir ilk akış</li>
-          <li>Bağlantı neden kurulmuyor</li>
-        </ul>
-      </div>
-    </li>
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-download" aria-hidden="true"></i>
+      <h2>Kurulum<span class="rozet">yakında</span></h2>
+      <p class="ozet">ComfyUI'ı bilgisayarına kurmak ve ilk açılışta ne yapman gerektiği.</p>
+      <ul class="kapsam">
+        <li>Portable sürümü indirip çalıştırmak</li>
+        <li>Model klasörlerinin nerede olduğu</li>
+        <li>İlk modeli indirip doğru yere koymak</li>
+        <li>Açılmıyorsa nereye bakılır</li>
+      </ul>
+    </article>
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>İlk görselin<span class="rozet">yakında</span></h2>
-        <p class="ozet">Hazır bir workflow ile üretime başlamak. Her şeyi anlamadan önce çalıştığını görmek.</p>
-        <ul class="kapsam">
-          <li>Hazır workflow'u yüklemek</li>
-          <li>Prompt yazmak ve kuyruğa almak</li>
-          <li>Çıktının nereye kaydedildiği</li>
-          <li>Üretim neden yavaş, hata veriyorsa neden</li>
-        </ul>
-      </div>
-    </li>
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-diagram-project" aria-hidden="true"></i>
+      <h2>Arayüz ve node mantığı<span class="rozet">yakında</span></h2>
+      <p class="ozet">Düğümler neden böyle bağlanıyor. Burayı anlarsan gerisi ezber olmaktan çıkıyor.</p>
+      <ul class="kapsam">
+        <li>Tuvalde gezinmek, düğüm eklemek ve silmek</li>
+        <li>Giriş ve çıkış uçları, renklerin ne anlama geldiği</li>
+        <li>Yapay zeka kullanmadan kurulan basit bir ilk akış</li>
+        <li>Bağlantı neden kurulmuyor</li>
+      </ul>
+    </article>
+  </section>
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>Workflow'u sıfırdan kurmak<span class="rozet">yakında</span></h2>
-        <p class="ozet">Aynı sonucu, her düğümü kendin bağlayarak üretmek. Rehberin dönüm noktası burası.</p>
-        <ul class="kapsam">
-          <li>Checkpoint, text encoder ve VAE'yi ayrı ayrı bağlamak</li>
-          <li>Pozitif ve negatif prompt'un akıştaki yeri</li>
-          <li>Latent boyutu seçmek</li>
-          <li>Akışı kaydetmek ve geri yüklemek</li>
-        </ul>
-      </div>
-    </li>
+  <section class="konu">
+    <div class="konu-ust">
+      <span class="konu-ad">Modeller</span><span class="konu-alt">Hangi model, nereye, nasıl</span>
+    </div>
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>KSampler ayarları<span class="rozet">yakında</span></h2>
-        <p class="ozet">Üretimi belirleyen altı ayar. Hangisini ne zaman değiştireceğin.</p>
-        <ul class="kapsam">
-          <li>Steps — artırmanın ne zaman anlamsız olduğu</li>
-          <li>CFG ve negatif prompt'la ilişkisi</li>
-          <li>Sampler ve scheduler eşleşmeleri</li>
-          <li>Seed'i sabitleyerek test etmek</li>
-          <li>Denoise ve img2img</li>
-        </ul>
-      </div>
-    </li>
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-cube" aria-hidden="true"></i>
+      <h2>Model seçimi ve kurulumu<span class="rozet">yakında</span></h2>
+      <p class="ozet">Hangi dosya nereye konur, hangi parçalar bir arada gerekir.</p>
+      <ul class="kapsam">
+        <li>Checkpoint, difüzyon modeli, VAE ve text encoder farkı</li>
+        <li>Her birinin hangi klasöre konduğu</li>
+        <li>Ekran kartına göre hangi sürümü indirmeli</li>
+        <li>Model listede görünmüyorsa ne yapılır</li>
+      </ul>
+    </article>
 
-    <li class="durak kilitli">
-      <div class="sira" aria-hidden="true"></div>
-      <div class="icerik">
-        <h2>Workflow'ları yönetmek<span class="rozet">yakında</span></h2>
-        <p class="ozet">Biriktirdiğin akışları düzenli tutmak ve başkalarının akışlarını çalıştırmak.</p>
-        <ul class="kapsam">
-          <li>Kaydetmek, dışa aktarmak, JSON'ın yapısı</li>
-          <li>PNG'ye gömülü workflow</li>
-          <li>Bypass ile mute arasındaki fark</li>
-          <li>Eksik düğümleri kurmak</li>
-        </ul>
-      </div>
-    </li>
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-layer-group" aria-hidden="true"></i>
+      <h2>LoRA kullanmak<span class="rozet">yakında</span></h2>
+      <p class="ozet">Modelin davranışını değiştiren küçük ek katmanlar.</p>
+      <ul class="kapsam">
+        <li>Akışa nereden bağlanır</li>
+        <li>Güç ayarı ve nasıl kalibre edilir</li>
+        <li>Birden fazla LoRA'yı birlikte kullanmak</li>
+        <li>Neden bazı LoRA'lar modelinle çalışmaz</li>
+      </ul>
+    </article>
+  </section>
 
-  </ol>
+  <section class="konu">
+    <div class="konu-ust">
+      <span class="konu-ad">Workflow</span><span class="konu-alt">Kendi akışını kurmak ve yönetmek</span>
+    </div>
+
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-pen-ruler" aria-hidden="true"></i>
+      <h2>Sıfırdan workflow<span class="rozet">yakında</span></h2>
+      <p class="ozet">Her düğümü kendin bağlayarak çalışan bir akış kurmak. Rehberin dönüm noktası burası.</p>
+      <ul class="kapsam">
+        <li>Model, text encoder ve VAE'yi ayrı ayrı bağlamak</li>
+        <li>Pozitif ve negatif prompt'un akıştaki yeri</li>
+        <li>Latent boyutu seçmek</li>
+        <li>Akışı adım adım sınamak</li>
+      </ul>
+    </article>
+
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-floppy-disk" aria-hidden="true"></i>
+      <h2>Kaydetmek ve paylaşmak<span class="rozet">yakında</span></h2>
+      <p class="ozet">Biriktirdiğin akışları düzenli tutmak ve başkalarının akışlarını çalıştırmak.</p>
+      <ul class="kapsam">
+        <li>Kaydetmek, dışa aktarmak, JSON'ın yapısı</li>
+        <li>PNG'ye gömülü workflow</li>
+        <li>Bypass ile mute arasındaki fark</li>
+        <li>Eksik düğümleri kurmak</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="konu">
+    <div class="konu-ust">
+      <span class="konu-ad">Üretim ayarları</span><span class="konu-alt">Çıktıyı belirleyen değerler</span>
+    </div>
+
+    <article class="bolum">
+      <i class="bolum-ikon fa-solid fa-sliders" aria-hidden="true"></i>
+      <h2>KSampler ayarları<span class="rozet">yakında</span></h2>
+      <p class="ozet">Üretimi belirleyen altı ayar. Hangisini ne zaman değiştireceğin.</p>
+      <ul class="kapsam">
+        <li>Steps — artırmanın ne zaman anlamsız olduğu</li>
+        <li>CFG ve negatif prompt'la ilişkisi</li>
+        <li>Sampler ve scheduler eşleşmeleri</li>
+        <li>Seed'i sabitleyerek test etmek</li>
+        <li>Denoise ve img2img</li>
+      </ul>
+    </article>
+  </section>
 
   <div class="kapanis">
     <p>Yeni bölüm çıktığında haberin olsun diye <a href="https://youtube.com/@lydaai" target="_blank" rel="noopener">YouTube kanalına</a> bakabilirsin. Eklenmesini istediğin bir konu varsa <a href="mailto:lyda@lyda.info">yaz</a>.</p>
