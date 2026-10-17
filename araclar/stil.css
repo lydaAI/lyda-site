@@ -1,0 +1,175 @@
+/* =================================================
+   Lyda AI — araç sayfaları ortak stili
+   ================================================= */
+
+:root{
+  --siyah:  #0A0A0A;
+  --beyaz:  #FFFFFF;
+  --kirmizi:#E8332C;
+  --gri:    #2B2B2B;
+  --acikgri:#8F8F8F;
+  --sonuk:  #5E5E5E;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+a,button{cursor:pointer}
+
+@view-transition{navigation:auto}
+::view-transition-old(root),
+::view-transition-new(root){animation-duration:.42s}
+
+body{
+  background:var(--siyah);
+  color:var(--beyaz);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  cursor:default;
+  padding:clamp(2rem,6vw,4rem) 1.5rem 5rem;
+}
+
+.sayfa{max-width:720px;margin:0 auto}
+
+/* ---------- Üst ---------- */
+.geri{
+  display:inline-block;
+  color:var(--acikgri);
+  text-decoration:none;
+  font-size:.85rem;
+  margin-bottom:1.6rem;
+  transition:color .18s ease;
+}
+.geri:hover,.geri:focus-visible{color:var(--kirmizi)}
+
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(2.1rem,7vw,2.9rem);
+  line-height:1.02;
+  letter-spacing:-.02em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+}
+
+.giris{
+  color:var(--acikgri);
+  margin-top:.9rem;
+  max-width:52ch;
+  font-size:.95rem;
+}
+
+/* ---------- Form öğeleri ---------- */
+label{display:block;font-size:.8rem;color:var(--acikgri);margin-bottom:.45rem}
+
+select,input[type="text"],input[type="number"],input[type="search"]{
+  width:100%;
+  background:var(--gri);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:6px;
+  color:var(--beyaz);
+  font:inherit;
+  font-size:.95rem;
+  padding:.65rem .8rem;
+  transition:border-color .18s ease;
+}
+
+select:focus,input:focus{outline:none;border-color:var(--kirmizi)}
+input::placeholder{color:var(--sonuk)}
+
+/* Seçenek düğmeleri */
+.secenekler{display:flex;flex-wrap:wrap;gap:.4rem}
+
+.secenek{
+  background:none;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:100px;
+  color:var(--acikgri);
+  font:inherit;
+  font-size:.82rem;
+  padding:.3rem .8rem;
+  transition:color .18s ease,border-color .18s ease,background .18s ease;
+}
+
+.secenek:hover{color:var(--beyaz);border-color:rgba(255,255,255,.4)}
+
+.secenek[aria-pressed="true"]{
+  background:var(--kirmizi);
+  border-color:var(--kirmizi);
+  color:var(--siyah);
+  font-weight:500;
+}
+
+.secenek:focus-visible{outline:2px solid var(--kirmizi);outline-offset:2px}
+
+/* ---------- Panel ---------- */
+.panel{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  background:rgba(14,14,14,.75);
+  padding:1.2rem 1.3rem;
+}
+
+.panel + .panel{margin-top:1rem}
+
+/* ---------- Bölüm başlığı ---------- */
+.bolum-baslik{
+  color:var(--kirmizi);
+  font-size:.8rem;
+  font-weight:500;
+  padding-bottom:.55rem;
+  border-bottom:1px solid rgba(232,51,44,.3);
+  margin:2.6rem 0 1.1rem;
+}
+
+/* ---------- Tablo ---------- */
+.tablo{width:100%;border-collapse:collapse;font-size:.9rem}
+
+.tablo th{
+  text-align:left;
+  font-weight:500;
+  font-size:.76rem;
+  color:var(--acikgri);
+  padding:0 .7rem .5rem 0;
+  border-bottom:1px solid rgba(255,255,255,.13);
+}
+
+.tablo td{
+  padding:.6rem .7rem .6rem 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  vertical-align:top;
+}
+
+.tablo tr:last-child td{border-bottom:0}
+.tablo .vurgu{color:var(--beyaz);font-weight:500}
+.tablo .sonuk{color:var(--acikgri)}
+
+/* ---------- Kod ---------- */
+code,.tek-aralik{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.88em;
+}
+
+code{
+  background:var(--gri);
+  border-radius:3px;
+  padding:.1em .38em;
+  color:var(--beyaz);
+}
+
+/* ---------- Alt ---------- */
+footer{
+  margin-top:3.5rem;
+  padding-top:1.6rem;
+  border-top:1px solid rgba(255,255,255,.1);
+  color:var(--sonuk);
+  font-size:.82rem;
+}
+
+footer a{color:var(--sonuk);transition:color .18s ease}
+footer a:hover{color:var(--kirmizi)}
+
+.komsu{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-bottom:1rem}
+.komsu a{color:var(--acikgri);text-decoration:none;font-size:.85rem;transition:color .18s ease}
+.komsu a:hover{color:var(--kirmizi)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

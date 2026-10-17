@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Çözünürlük Seçici — Lyda AI</title>
+<meta name="description" content="SD 1.5, SDXL ve Flux için doğru görsel boyutları. En-boy oranına göre hazır ölçüler ve kendi boyutunu kontrol etme aracı.">
+
+<meta property="og:site_name" content="Lyda AI">
+<meta property="og:title" content="ComfyUI Çözünürlük Seçici">
+<meta property="og:description" content="SDXL'de 16:9 kaça kaç? Modeline ve oranına göre doğru boyutu ver.">
+<meta property="og:url" content="https://lyda.info/araclar/cozunurluk/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:image" content="https://lyda.info/paylasim.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lyda.info/paylasim.png">
+<meta name="theme-color" content="#E8332C">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/araclar/stil.css">
+
+<style>
+.ayarlar{display:grid;gap:1.1rem;margin-top:2.2rem}
+
+.sonuc{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:.5rem 1.2rem;
+  margin-top:1.4rem;
+  padding:1.2rem 1.3rem;
+  border:1px solid rgba(232,51,44,.4);
+  border-radius:8px;
+  background:rgba(232,51,44,.06);
+}
+
+.sonuc-olcu{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(1.8rem,6vw,2.4rem);
+  line-height:1;
+  letter-spacing:-.01em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+}
+
+.sonuc-detay{color:var(--acikgri);font-size:.84rem}
+
+.kopyala{
+  margin-left:auto;
+  background:none;
+  border:1px solid rgba(232,51,44,.45);
+  border-radius:100px;
+  color:var(--kirmizi);
+  font:inherit;
+  font-size:.78rem;
+  padding:.25rem .75rem;
+  transition:background .18s ease;
+}
+.kopyala:hover{background:rgba(232,51,44,.14)}
+.kopyala:focus-visible{outline:2px solid var(--kirmizi);outline-offset:2px}
+
+.model-not{color:var(--sonuk);font-size:.82rem;margin-top:.9rem}
+
+.uyari{
+  margin-top:.9rem;
+  padding:.65rem .85rem;
+  border-left:2px solid var(--kirmizi);
+  background:rgba(232,51,44,.06);
+  color:var(--acikgri);
+  font-size:.84rem;
+}
+
+.satir-olcu{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--beyaz)}
+
+.kontrol-giris{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:.6rem;max-width:340px}
+.kontrol-carpi{color:var(--acikgri);padding-bottom:.65rem}
+.kontrol-sonuc{margin-top:1.1rem;font-size:.9rem;color:var(--acikgri)}
+.kontrol-sonuc strong{color:var(--beyaz);font-weight:500}
+.iyi{color:#7BC96F}
+.kotu{color:var(--kirmizi)}
+</style>
+</head>
+
+<body>
+<main class="sayfa">
+
+  <a class="geri" href="/">← lyda.info</a>
+
+  <h1>Çözünürlük Seçici</h1>
+  <p class="giris">Her model belli bir boyutta eğitildi. O boyuttan uzaklaştıkça kompozisyon bozulur, figürler ikizlenir. Modelini ve oranını seç, doğru ölçüyü al.</p>
+
+  <div class="ayarlar">
+    <div>
+      <label for="model">Model</label>
+      <select id="model">
+        <option value="sd15">SD 1.5 — 512 piksel tabanlı</option>
+        <option value="sdxl" selected>SDXL / Pony / Illustrious — 1 MP</option>
+        <option value="flux">Flux, SD3, Qwen — 1 MP</option>
+        <option value="flux2">Flux — 2 MP (yüksek)</option>
+      </select>
+    </div>
+
+    <div>
+      <label id="oran-etiket">En-boy oranı</label>
+      <div class="secenekler" id="oranlar" role="group" aria-labelledby="oran-etiket"></div>
+    </div>
+  </div>
+
+  <div class="sonuc">
+    <span class="sonuc-olcu" id="olcu">—</span>
+    <span class="sonuc-detay" id="detay"></span>
+    <button class="kopyala" type="button" id="kopyala">Kopyala</button>
+  </div>
+
+  <p class="model-not" id="model-not"></p>
+  <div id="uyari-alani"></div>
+
+  <!-- ============ TÜM ÖLÇÜLER ============ -->
+  <h2 class="bolum-baslik">Seçili modelin tüm ölçüleri</h2>
+  <table class="tablo">
+    <thead>
+      <tr><th>Oran</th><th>Genişlik × Yükseklik</th><th>Gerçek oran</th><th>Piksel</th></tr>
+    </thead>
+    <tbody id="tablo-govde"></tbody>
+  </table>
+
+  <!-- ============ KONTROL ============ -->
+  <h2 class="bolum-baslik">Kendi boyutunu kontrol et</h2>
+  <p class="giris" style="margin-top:0">Aklındaki ölçü çalışır mı? Yaz, bakalım.</p>
+
+  <div class="kontrol-giris">
+    <div>
+      <label for="en">Genişlik</label>
+      <input id="en" type="number" inputmode="numeric" value="1024" min="64" max="8192" step="1">
+    </div>
+    <span class="kontrol-carpi">×</span>
+    <div>
+      <label for="boy">Yükseklik</label>
+      <input id="boy" type="number" inputmode="numeric" value="1024" min="64" max="8192" step="1">
+    </div>
+  </div>
+
+  <div class="kontrol-sonuc" id="kontrol-sonuc"></div>
+
+  <!-- ============ NEDEN ============ -->
+  <h2 class="bolum-baslik">Neden önemli</h2>
+  <p class="giris" style="margin-top:0">Latent alanda her piksel 8'e bölünür, bu yüzden boyutların 8'in katı olması zorunludur. SDXL 64'ün, Flux 16'nın katlarıyla daha temiz çalışır.</p>
+  <p class="giris">Model eğitildiği alanın çok üstünde bir boyut istediğinde, tek bir kompozisyon kurmak yerine öğrendiği kalıbı tekrarlar — iki başlı figürler, kopyalanmış gövdeler buradan çıkar. Büyük görsel istiyorsan doğru boyutta üretip sonra büyüt.</p>
+
+  <footer>
+    <div class="komsu">
+      <a href="/sozluk/">Sözlük</a>
+      <a href="/araclar/model-adi/">Model adı çözücü</a>
+      <a href="/araclar/hatalar/">Hata sözlüğü</a>
+      <a href="/rehber/">ComfyUI Rehberi</a>
+    </div>
+    Eksik gördüğün bir şey varsa <a href="mailto:lyda@lyda.info">yaz</a>. · <a href="/">lyda.info</a>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  var ORANLAR = [
+    ["1:1", 1/1], ["4:3", 4/3], ["3:4", 3/4], ["3:2", 3/2], ["2:3", 2/3],
+    ["16:9", 16/9], ["9:16", 9/16], ["21:9", 21/9], ["9:21", 9/21]
+  ];
+
+  // SDXL'in resmî eğitim kovaları — hesapla değil, olduğu gibi kullanılır
+  var SDXL_KOVA = {
+    "1:1":[1024,1024], "4:3":[1152,896], "3:4":[896,1152],
+    "3:2":[1216,832],  "2:3":[832,1216],
+    "16:9":[1344,768], "9:16":[768,1344],
+    "21:9":[1536,640], "9:21":[640,1536]
+  };
+
+  var MODELLER = {
+    sd15:  { px:512*512,   kat:64, not:"SD 1.5 512×512 üzerinde eğitildi. 768 pikseli aşan kenarlarda ikizlenme sık görülür." },
+    sdxl:  { px:1024*1024, kat:64, kova:SDXL_KOVA, not:"Aşağıdakiler SDXL'in üzerinde eğitildiği resmî kovalar. Pony ve Illustrious da SDXL tabanlı olduğu için aynısını kullanır." },
+    flux:  { px:1024*1024, kat:16, not:"Flux boyut konusunda SDXL'den esnek, ama 1 megapiksel civarı en kararlı sonucu verir." },
+    flux2: { px:2097152,   kat:16, not:"Flux 2 megapiksele kadar çıkabilir. Karşılığında üretim süresi ve VRAM kullanımı belirgin şekilde artar." }
+  };
+
+  var modelSec = document.getElementById("model");
+  var oranlarKutu = document.getElementById("oranlar");
+  var olcuEl = document.getElementById("olcu");
+  var detayEl = document.getElementById("detay");
+  var notEl = document.getElementById("model-not");
+  var uyariEl = document.getElementById("uyari-alani");
+  var tabloEl = document.getElementById("tablo-govde");
+  var kopyalaEl = document.getElementById("kopyala");
+  var seciliOran = "16:9";
+
+  function hesapla(model, oranAd) {
+    var m = MODELLER[model];
+    if (m.kova && m.kova[oranAd]) return m.kova[oranAd].slice();
+
+    var r = 0;
+    for (var i = 0; i < ORANLAR.length; i++) if (ORANLAR[i][0] === oranAd) r = ORANLAR[i][1];
+
+    // Dikey oranları yataydan türet, iki yön birbirinin aynası olsun
+    if (r < 1) {
+      var ters = hesapla(model, oranAd.split(":").reverse().join(":"));
+      return [ters[1], ters[0]];
+    }
+
+    var en = Math.round(Math.sqrt(m.px * r) / m.kat) * m.kat;
+    var boy = Math.round((en / r) / m.kat) * m.kat;
+    return [Math.max(m.kat, en), Math.max(m.kat, boy)];
+  }
+
+  function mp(en, boy) { return ((en * boy) / 1048576).toFixed(2); }
+  function gercekOran(en, boy) { return (en / boy).toFixed(3); }
+
+  function oranDugmeleri() {
+    oranlarKutu.innerHTML = "";
+    ORANLAR.forEach(function (o) {
+      var d = document.createElement("button");
+      d.type = "button";
+      d.className = "secenek";
+      d.textContent = o[0];
+      d.setAttribute("aria-pressed", o[0] === seciliOran ? "true" : "false");
+      d.addEventListener("click", function () {
+        seciliOran = o[0];
+        yenile();
+      });
+      oranlarKutu.appendChild(d);
+    });
+  }
+
+  function yenile() {
+    var model = modelSec.value;
+    var m = MODELLER[model];
+
+    Array.prototype.forEach.call(oranlarKutu.children, function (d) {
+      d.setAttribute("aria-pressed", d.textContent === seciliOran ? "true" : "false");
+    });
+
+    var o = hesapla(model, seciliOran);
+    olcuEl.textContent = o[0] + " × " + o[1];
+    detayEl.textContent = "gerçek oran " + gercekOran(o[0], o[1]) + " · " + mp(o[0], o[1]) + " MP";
+    notEl.textContent = m.not;
+
+    // Tablo
+    tabloEl.innerHTML = "";
+    ORANLAR.forEach(function (oran) {
+      var b = hesapla(model, oran[0]);
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='" + (oran[0] === seciliOran ? "vurgu" : "sonuk") + "'>" + oran[0] + "</td>" +
+                     "<td class='satir-olcu'>" + b[0] + " × " + b[1] + "</td>" +
+                     "<td class='sonuk'>" + gercekOran(b[0], b[1]) + "</td>" +
+                     "<td class='sonuk'>" + mp(b[0], b[1]) + " MP</td>";
+      tabloEl.appendChild(tr);
+    });
+
+    kontrolYenile();
+  }
+
+  kopyalaEl.addEventListener("click", function () {
+    var metin = olcuEl.textContent.replace(/\s/g, "");
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(metin).then(function () {
+        kopyalaEl.textContent = "Kopyalandı";
+        setTimeout(function () { kopyalaEl.textContent = "Kopyala"; }, 1400);
+      });
+    }
+  });
+
+  /* ---------- Kendi boyutunu kontrol et ---------- */
+  var enEl = document.getElementById("en");
+  var boyEl = document.getElementById("boy");
+  var kontrolEl = document.getElementById("kontrol-sonuc");
+
+  function kontrolYenile() {
+    var en = parseInt(enEl.value, 10);
+    var boy = parseInt(boyEl.value, 10);
+    if (!en || !boy || en < 64 || boy < 64) {
+      kontrolEl.innerHTML = "<span class='sonuk'>İki kenarı da gir.</span>";
+      uyariEl.innerHTML = "";
+      return;
+    }
+
+    var m = MODELLER[modelSec.value];
+    var satirlar = [];
+
+    var sekiz = (en % 8 === 0) && (boy % 8 === 0);
+    satirlar.push(sekiz
+      ? "<span class='iyi'>✓</span> İkisi de 8'in katı."
+      : "<span class='kotu'>✕</span> 8'in katı değil — ComfyUI boyutu kendiliğinden aşağı yuvarlar.");
+
+    var katUygun = (en % m.kat === 0) && (boy % m.kat === 0);
+    if (m.kat !== 8) {
+      satirlar.push(katUygun
+        ? "<span class='iyi'>✓</span> İkisi de " + m.kat + "'nın katı."
+        : "<span class='sonuk'>•</span> " + m.kat + "'nın katı değil. Çalışır ama bu model için " + m.kat + "'nın katları daha temiz sonuç verir.");
+    }
+
+    var toplam = en * boy;
+    satirlar.push("<strong>" + (toplam / 1048576).toFixed(2) + " MP</strong>, oran <strong>" + gercekOran(en, boy) + "</strong>");
+
+    // En yakın geçerli ölçü
+    var yEn = Math.max(m.kat, Math.round(en / m.kat) * m.kat);
+    var yBoy = Math.max(m.kat, Math.round(boy / m.kat) * m.kat);
+    if (yEn !== en || yBoy !== boy) {
+      satirlar.push("En yakın uygun ölçü: <strong class='satir-olcu'>" + yEn + " × " + yBoy + "</strong>");
+    }
+
+    kontrolEl.innerHTML = satirlar.join("<br>");
+
+    // Uyarılar
+    var oran = toplam / m.px;
+    uyariEl.innerHTML = "";
+    if (oran > 1.7) {
+      uyariEl.innerHTML = "<p class='uyari'>Bu ölçü modelin eğitildiği alanın " + oran.toFixed(1) +
+        " katı. Doğrudan bu boyutta üretirsen figürlerin ikizlenmesi ve kompozisyonun dağılması olası. " +
+        "Doğru boyutta üretip büyütmek daha güvenli.</p>";
+    } else if (oran < 0.45) {
+      uyariEl.innerHTML = "<p class='uyari'>Bu ölçü modelin eğitildiği alanın çok altında. Detay kaybı ve bozuk yüzler beklenir.</p>";
+    }
+  }
+
+  modelSec.addEventListener("change", yenile);
+  enEl.addEventListener("input", kontrolYenile);
+  boyEl.addEventListener("input", kontrolYenile);
+
+  oranDugmeleri();
+  yenile();
+})();
+</script>
+
+</body>
+</html>
