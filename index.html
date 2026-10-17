@@ -61,9 +61,15 @@ body{
   -webkit-font-smoothing:antialiased;
   cursor:default;
   min-height:100vh;
-  display:flex;
-  justify-content:center;
   padding:clamp(2.5rem,8vw,5rem) 1.5rem 3rem;
+}
+
+.sayfa{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:880px;
+  margin:0 auto;
 }
 
 /* ---------- Akan görsel duvarı ---------- */
@@ -124,7 +130,7 @@ body{
 }
 
 /* ---------- İçerik ---------- */
-.kakemono{width:100%;max-width:430px;position:relative;z-index:2}
+.kakemono{width:100%;max-width:430px;margin:0 auto}
 
 .tepe{display:flex;flex-direction:column;align-items:flex-start;gap:.9rem}
 
@@ -177,7 +183,6 @@ h1{
 .baglantilar>li:nth-child(2){animation-delay:.56s}
 .baglantilar>li:nth-child(3){animation-delay:.70s}
 .baglantilar>li:nth-child(4){animation-delay:.84s}
-.baglantilar>li:nth-child(5){animation-delay:.98s}
 
 /* Alt satırlar kapalı başlıyor, ayrıca belirmelerine gerek yok */
 .altlar li{opacity:1;transform:none;animation:none}
@@ -195,80 +200,6 @@ h1{
 
 .baglantilar>li:hover::before,
 .baglantilar>li:focus-within::before{background:var(--kirmizi)}
-
-/* ---------- Öne çıkan düğüm: rehber ---------- */
-.one-cikan::before{
-  width:13px!important;height:13px!important;
-  left:calc(-1.5rem - 2px)!important;
-  top:1.5rem!important;
-  background:var(--kirmizi)!important;
-  box-shadow:0 0 0 4px rgba(232,51,44,.15);
-}
-
-a.buyuk{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-  padding:1.25rem 0 1.4rem;
-  border-bottom:1px solid rgba(255,255,255,.13);
-  border-top:1px solid rgba(255,255,255,.13);
-  color:var(--beyaz);
-  text-decoration:none;
-}
-
-a.buyuk:focus-visible{outline:2px solid var(--kirmizi);outline-offset:4px;border-radius:2px}
-
-.buyuk-ad{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:1.32rem;
-  line-height:1.1;
-  letter-spacing:-.01em;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  display:block;
-  transition:color .18s ease;
-  view-transition-name:rehber-baslik;
-}
-
-a.buyuk:hover .buyuk-ad,
-a.buyuk:focus-visible .buyuk-ad{color:var(--kirmizi)}
-
-.buyuk-aciklama{
-  display:block;
-  color:var(--acikgri);
-  font-size:.86rem;
-  margin-top:.3rem;
-  max-width:30ch;
-}
-
-/* Bölüm sayıları — kapsamı bir bakışta gösteriyor */
-.siralar{
-  display:flex;
-  gap:.5rem;
-  margin-top:.85rem;
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:.95rem;
-  line-height:1;
-  color:transparent;
-  -webkit-text-stroke:.8px rgba(232,51,44,.5);
-  transition:-webkit-text-stroke-color .25s ease;
-}
-
-a.buyuk:hover .siralar{-webkit-text-stroke-color:var(--kirmizi)}
-
-.siralar span{transition:color .25s ease}
-a.buyuk:hover .siralar span{color:rgba(232,51,44,.2)}
-
-.buyuk-ok{
-  color:var(--kirmizi);
-  font-size:1.1rem;
-  flex-shrink:0;
-  transition:transform .2s ease;
-}
-
-a.buyuk:hover .buyuk-ok{transform:translateX(4px)}
 
 /* ---------- Link satırı ---------- */
 a.satir{
@@ -394,8 +325,9 @@ a.satir:focus-visible .ad svg.hf{fill:var(--kirmizi)}
 .not{color:var(--acikgri);font-size:.83rem;text-align:right;flex-shrink:0}
 
 footer{
-  margin-top:2.5rem;
-  padding-left:1.5rem;
+  margin-top:3.5rem;
+  padding-top:1.6rem;
+  border-top:1px solid rgba(255,255,255,.1);
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -438,6 +370,169 @@ footer{
 ::view-transition-old(root),
 ::view-transition-new(root){animation-duration:.42s}
 
+/* ---------- Sayfalar arası geçiş ---------- */
+@view-transition{navigation:auto}
+::view-transition-old(root),
+::view-transition-new(root){animation-duration:.42s}
+
+/* =================================================
+   REHBER ALANI — ComfyUI'ın kendi görsel diliyle
+   ================================================= */
+.rehber-alani{
+  margin-top:clamp(3.5rem,9vw,5.5rem);
+  opacity:0;
+  animation:satirIn .6s ease-out 1.1s forwards;
+}
+
+.alan-ust{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.6rem 1rem;
+  padding-bottom:.9rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.alan-ust h2{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(1.5rem,4vw,1.9rem);
+  line-height:1;
+  letter-spacing:-.01em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+  view-transition-name:rehber-baslik;
+}
+
+.alan-sol{display:flex;align-items:baseline;flex-wrap:wrap;gap:.3rem .9rem}
+.alan-not{color:var(--acikgri);font-size:.86rem}
+
+.alan-tum{
+  color:var(--acikgri);
+  font-size:.84rem;
+  text-decoration:none;
+  white-space:nowrap;
+  transition:color .18s ease;
+}
+.alan-tum:hover,.alan-tum:focus-visible{color:var(--kirmizi)}
+
+/* ---------- Tuval ---------- */
+.tuval{position:relative;margin-top:2rem}
+
+#kablolar{
+  position:absolute;
+  inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.dugumler{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:clamp(1.8rem,4vw,2.6rem) clamp(2.5rem,7vw,4.5rem);
+}
+
+@media (max-width:680px){
+  .dugumler{grid-template-columns:1fr;gap:2.2rem}
+}
+
+/* ---------- Düğüm ---------- */
+.dugum{
+  position:relative;
+  display:block;
+  padding:0;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:7px;
+  background:rgba(14,14,14,.88);
+  text-decoration:none;
+  color:var(--beyaz);
+  overflow:hidden;
+  transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+
+.dugum:hover,.dugum:focus-visible{
+  border-color:var(--kirmizi);
+  transform:translateY(-2px);
+  box-shadow:0 6px 22px rgba(0,0,0,.45);
+}
+
+.dugum:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
+
+/* Başlık çubuğu — ComfyUI düğümlerindeki gibi */
+.dugum-ust{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.6rem .85rem;
+  background:rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.dugum-no{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:.86rem;
+  color:var(--kirmizi);
+  flex-shrink:0;
+  min-width:1.5em;
+}
+
+.dugum-ad{font-size:.92rem;font-weight:500;line-height:1.25}
+
+.dugum-govde{
+  display:block;
+  padding:.7rem .85rem .85rem;
+  color:var(--acikgri);
+  font-size:.83rem;
+  line-height:1.5;
+}
+
+.dugum-etiket{
+  display:inline-block;
+  margin-left:auto;
+  font-size:.68rem;
+  color:#5E5E5E;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:100px;
+  padding:.05rem .45rem;
+  flex-shrink:0;
+}
+
+/* Giriş ve çıkış uçları */
+.uc{
+  position:absolute;
+  top:1.32rem;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--siyah);
+  border:1px solid var(--kirmizi);
+  transition:background .2s ease;
+}
+.uc-giris{left:-4px}
+.uc-cikis{right:-4px}
+
+.dugum:hover .uc{background:var(--kirmizi)}
+
+/* Tek sütunda akış yukarıdan aşağı — uçlar da öyle */
+@media (max-width:680px){
+  .uc-giris{left:50%;top:-4px;transform:translateX(-50%)}
+  .uc-cikis{left:50%;right:auto;top:auto;bottom:-4px;transform:translateX(-50%)}
+}
+
+/* Hazır olan düğüm */
+.dugum.hazir{border-color:rgba(232,51,44,.5)}
+.dugum.hazir .dugum-ust{background:rgba(232,51,44,.1)}
+.dugum.hazir .uc{background:var(--kirmizi)}
+.dugum.hazir .dugum-etiket{color:var(--kirmizi);border-color:rgba(232,51,44,.4)}
+
+/* Henüz yayında olmayanlar */
+.dugum.kilitli .dugum-ad{color:var(--acikgri);font-weight:400}
+.dugum.kilitli .dugum-govde{color:#5E5E5E}
+.dugum.kilitli .dugum-no{color:rgba(232,51,44,.5)}
+.dugum.kilitli .uc{border-color:rgba(232,51,44,.45)}
+
 @keyframes kabloIn{to{transform:scaleY(1)}}
 @keyframes satirIn{to{opacity:1;transform:translateY(0)}}
 @keyframes akisYukari{from{transform:translateY(0)}to{transform:translateY(-50%)}}
@@ -445,7 +540,7 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  h1,.tanim,footer,.baglantilar li,.sosyal{opacity:1;transform:none}
+  h1,.tanim,footer,.baglantilar li,.sosyal,.rehber-alani{opacity:1;transform:none}
   .baglantilar::before{transform:scaleY(1)}
 }
 </style>
@@ -490,6 +585,8 @@ footer{
 </div>
 <div class="perde"></div>
 
+<div class="sayfa">
+
 <main class="kakemono">
 
   <header class="tepe">
@@ -501,17 +598,6 @@ footer{
        LİNKLER — sadece burayı düzenle.
        ================================================ -->
   <ul class="baglantilar">
-
-    <li class="one-cikan">
-      <a class="buyuk" href="/rehber/">
-        <span>
-          <span class="buyuk-ad">ComfyUI Rehberi</span>
-          <span class="buyuk-aciklama">Sıfırdan kendi workflow'unu kurana kadar, altı bölüm. Sözlük hazır.</span>
-          <span class="siralar" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></span>
-        </span>
-        <span class="buyuk-ok" aria-hidden="true">→</span>
-      </a>
-    </li>
 
     <li>
       <div class="satir-sarmal">
@@ -573,7 +659,117 @@ footer{
 
   </ul>
 
-  <footer>
+</main>
+
+<!-- =================================================
+     REHBER ALANI
+     Bölüm yayına girince: "kilitli" sınıfını sil,
+     href'i bölümün adresiyle değiştir, etiketi güncelle.
+     Kablolar sayfa sonundaki betikle çiziliyor.
+     ================================================= -->
+<section class="rehber-alani" aria-labelledby="alan-baslik">
+
+  <div class="alan-ust">
+    <div class="alan-sol">
+      <h2 id="alan-baslik">ComfyUI Rehberi</h2>
+      <span class="alan-not">Altı bölüm, sırayla</span>
+    </div>
+    <a class="alan-tum" href="/rehber/">Rehbere git →</a>
+  </div>
+
+  <div class="tuval">
+    <svg id="kablolar" aria-hidden="true"></svg>
+    <ol class="dugumler">
+      <li>
+        <a class="dugum hazir" href="/sozluk/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">✦</span>
+            <span class="dugum-ad">Sözlük</span>
+            <span class="dugum-etiket">hazır</span>
+          </span>
+          <span class="dugum-govde">45 terim, aranabilir. Hangi bölümde olursan ol takıldığında buraya bak.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">01</span>
+            <span class="dugum-ad">Kurulum</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">ComfyUI'ı kurmak, model klasörleri, ilk açılışta ne yapılır.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">02</span>
+            <span class="dugum-ad">Arayüz ve node mantığı</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">Düğümler neden böyle bağlanıyor. Burayı anlarsan gerisi ezber olmaktan çıkar.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">03</span>
+            <span class="dugum-ad">İlk görselin</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">Hazır bir workflow ile üretime başlamak.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">04</span>
+            <span class="dugum-ad">Workflow'u sıfırdan kurmak</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">Her düğümü kendin bağlayarak aynı sonucu üretmek.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">05</span>
+            <span class="dugum-ad">KSampler ayarları</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">Steps, CFG, sampler, scheduler, seed, denoise.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+      <li>
+        <a class="dugum kilitli" href="/rehber/">
+          <span class="uc uc-giris" aria-hidden="true"></span>
+          <span class="dugum-ust">
+            <span class="dugum-no" aria-hidden="true">06</span>
+            <span class="dugum-ad">Workflow'ları yönetmek</span>
+            <span class="dugum-etiket">yakında</span>
+          </span>
+          <span class="dugum-govde">Kaydetmek, paylaşmak, başkalarının akışlarını çalıştırmak.</span>
+          <span class="uc uc-cikis" aria-hidden="true"></span>
+        </a>
+      </li>
+    </ol>
+  </div>
+
+</section>
+
+<footer>
     <span>lyda.info</span>
 
     <!-- SOSYAL MEDYA — daire silmek için ilgili a satırını kaldır -->
@@ -582,11 +778,72 @@ footer{
       <a href="https://x.com/Lyda_AI" aria-label="X" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
       <a href="https://discord.gg/lyda" aria-label="Discord" target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
     </nav>
-  </footer>
+</footer>
 
-</main>
+</div>
 
 <script>
+/* ---------- Düğümleri birbirine bağlayan kablolar ----------
+   Konumlar yerleşimden sonra ölçülüyor, böylece her ekran
+   genişliğinde ve yeniden boyutlandırmada doğru çiziliyor. */
+(function () {
+  var svg = document.getElementById("kablolar");
+  var tuval = document.querySelector(".tuval");
+  if (!svg || !tuval) return;
+
+  var dugumler = Array.prototype.slice.call(document.querySelectorAll(".dugum"));
+  var NS = "http://www.w3.org/2000/svg";
+
+  function ciz() {
+    svg.innerHTML = "";
+    var t = tuval.getBoundingClientRect();
+    var dikey = window.matchMedia("(max-width:680px)").matches;
+    svg.setAttribute("viewBox", "0 0 " + t.width + " " + t.height);
+
+    for (var i = 0; i < dugumler.length - 1; i++) {
+      var a = dugumler[i].querySelector(".uc-cikis").getBoundingClientRect();
+      var b = dugumler[i + 1].querySelector(".uc-giris").getBoundingClientRect();
+
+      var x1 = a.left + a.width / 2 - t.left, y1 = a.top + a.height / 2 - t.top;
+      var x2 = b.left + b.width / 2 - t.left, y2 = b.top + b.height / 2 - t.top;
+
+      var d;
+      if (dikey) {
+        // Tek sütun: yukarıdan aşağı inen kablo
+        var dy = Math.max(14, (y2 - y1) * 0.45);
+        d = "M " + x1 + " " + y1 +
+            " C " + x1 + " " + (y1 + dy) +
+            ", " + x2 + " " + (y2 - dy) +
+            ", " + x2 + " " + y2;
+      } else {
+        // İki sütun: aynı satırda yumuşak kavis, satır atlayınca dar S
+        var ayniSatir = Math.abs(y2 - y1) < 20;
+        var dx = ayniSatir ? Math.max(38, (x2 - x1) * 0.5) : 34;
+        var k1 = Math.min(t.width, x1 + dx);
+        var k2 = Math.max(0, x2 - dx);
+        d = "M " + x1 + " " + y1 +
+            " C " + k1 + " " + y1 +
+            ", " + k2 + " " + y2 +
+            ", " + x2 + " " + y2;
+      }
+
+      var yol = document.createElementNS(NS, "path");
+      yol.setAttribute("d", d);
+      yol.setAttribute("fill", "none");
+      yol.setAttribute("stroke", "rgba(232,51,44,.38)");
+      yol.setAttribute("stroke-width", "1.5");
+      yol.setAttribute("stroke-linecap", "round");
+      if (i === 0) yol.setAttribute("stroke-dasharray", "4 4");
+      svg.appendChild(yol);
+    }
+  }
+
+  ciz();
+  window.addEventListener("resize", ciz);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ciz);
+  window.addEventListener("load", ciz);
+})();
+
 document.querySelectorAll("button.ac").forEach(function (dugme) {
   dugme.addEventListener("click", function () {
     var satir = dugme.closest("li");
