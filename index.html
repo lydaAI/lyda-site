@@ -390,9 +390,47 @@ footer{
   justify-content:space-between;
   flex-wrap:wrap;
   gap:.6rem 1rem;
-  padding-bottom:.9rem;
+}
+
+/* ---------- Kategori süzgeci ---------- */
+.suzgec{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.3rem 1.4rem;
+  margin-top:1rem;
+  padding-bottom:.85rem;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
+
+.suz{
+  position:relative;
+  background:none;
+  border:0;
+  padding:.15rem 0;
+  font:inherit;
+  font-size:.86rem;
+  color:var(--acikgri);
+  transition:color .18s ease;
+}
+
+.suz:hover{color:var(--beyaz)}
+.suz[aria-pressed="true"]{color:var(--kirmizi)}
+
+.suz[aria-pressed="true"]::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-.85rem;
+  height:1px;
+  background:var(--kirmizi);
+}
+
+.suz:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px;border-radius:2px}
+
+.kategori.gizli{display:none}
+
+/* Tek kategori süzüldüğünde başlık süzgeci tekrar etmesin */
+.rehber-alani.tekli .kategori-ad{display:none}
+.rehber-alani.tekli .kategori{margin-top:1.6rem}
 
 .alan-ust h2{
   font-family:"Fraunces",Georgia,serif;
@@ -660,7 +698,14 @@ footer{
     <a class="alan-tum" href="/rehber/">Rehbere git →</a>
   </div>
 
-    <div class="kategori">
+  <div class="suzgec" role="group" aria-label="Kategoriye göre süz">
+    <button class="suz" type="button" data-kategori="hepsi" aria-pressed="true">Hepsi</button>
+    <button class="suz" type="button" data-kategori="baslangic" aria-pressed="false">Başlangıç</button>
+    <button class="suz" type="button" data-kategori="workflow" aria-pressed="false">Workflow</button>
+    <button class="suz" type="button" data-kategori="basvuru" aria-pressed="false">Başvuru</button>
+  </div>
+
+    <div class="kategori" data-kategori="baslangic">
       <h3 class="kategori-ad">Başlangıç<span>ComfyUI'ı çalışır hale getirmek</span></h3>
       <ul class="dugumler">
         <li>
@@ -696,7 +741,7 @@ footer{
       </ul>
     </div>
 
-    <div class="kategori">
+    <div class="kategori" data-kategori="workflow">
       <h3 class="kategori-ad">Workflow<span>Kendi akışını kurmak</span></h3>
       <ul class="dugumler">
         <li>
@@ -732,7 +777,7 @@ footer{
       </ul>
     </div>
 
-    <div class="kategori">
+    <div class="kategori" data-kategori="basvuru">
       <h3 class="kategori-ad">Başvuru<span>Her zaman açık kalabilir</span></h3>
       <ul class="dugumler">
         <li>
@@ -764,6 +809,30 @@ footer{
 </div>
 
 <script>
+/* ---------- Kategori süzgeci ---------- */
+(function () {
+  var dugmeler = Array.prototype.slice.call(document.querySelectorAll(".suz"));
+  var kategoriler = Array.prototype.slice.call(document.querySelectorAll(".kategori"));
+  if (!dugmeler.length) return;
+
+  dugmeler.forEach(function (dugme) {
+    dugme.addEventListener("click", function () {
+      var secili = dugme.dataset.kategori;
+
+      dugmeler.forEach(function (d) {
+        d.setAttribute("aria-pressed", d === dugme ? "true" : "false");
+      });
+
+      kategoriler.forEach(function (k) {
+        k.classList.toggle("gizli", secili !== "hepsi" && k.dataset.kategori !== secili);
+      });
+
+      document.querySelector(".rehber-alani")
+        .classList.toggle("tekli", secili !== "hepsi");
+    });
+  });
+})();
+
 document.querySelectorAll("button.ac").forEach(function (dugme) {
   dugme.addEventListener("click", function () {
     var satir = dugme.closest("li");
