@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Dosya Adı Çözücü — Lyda AI</title>
+<meta name="description" content="flux1-dev-Q4_K_S.gguf ne demek? Model dosya adını yapıştır, her parçasının ne anlama geldiğini açıklasın.">
+
+<meta property="og:site_name" content="Lyda AI">
+<meta property="og:title" content="Model Dosya Adı Çözücü">
+<meta property="og:description" content="Model dosya adındaki fp8, Q4_K_M, pruned ne demek? Yapıştır, çözsün.">
+<meta property="og:url" content="https://lyda.info/araclar/model-adi/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:image" content="https://lyda.info/paylasim.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lyda.info/paylasim.png">
+<meta name="theme-color" content="#E8332C">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/araclar/stil.css">
+
+<style>
+#dosya{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.92rem;
+}
+
+label[for="dosya"]{margin-top:2.2rem}
+
+.ornekler{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+
+.ornek{
+  background:none;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:100px;
+  color:var(--sonuk);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.74rem;
+  padding:.22rem .7rem;
+  transition:color .18s ease,border-color .18s ease;
+}
+.ornek:hover{color:var(--beyaz);border-color:rgba(255,255,255,.4)}
+.ornek:focus-visible{outline:2px solid var(--kirmizi);outline-offset:2px}
+
+.ozet{
+  margin-top:1.5rem;
+  padding:1.1rem 1.25rem;
+  border:1px solid rgba(232,51,44,.4);
+  border-radius:8px;
+  background:rgba(232,51,44,.06);
+  font-size:.96rem;
+}
+
+.ozet.bos{
+  border-color:rgba(255,255,255,.12);
+  background:rgba(14,14,14,.75);
+  color:var(--acikgri);
+  font-size:.9rem;
+}
+
+/* Parçalar */
+.parcalar{list-style:none;margin-top:1.6rem}
+
+.parca{
+  display:grid;
+  grid-template-columns:minmax(6.5rem,auto) 1fr;
+  gap:.2rem 1.1rem;
+  padding:.95rem 0;
+  border-bottom:1px solid rgba(255,255,255,.09);
+}
+
+.parca:first-child{border-top:1px solid rgba(255,255,255,.09)}
+
+.parca-metin{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.88rem;
+  color:var(--kirmizi);
+  word-break:break-all;
+}
+
+.parca-tur{
+  grid-column:1;
+  font-size:.7rem;
+  color:var(--sonuk);
+}
+
+.parca-baslik{font-size:.95rem;font-weight:500;grid-column:2;grid-row:1}
+.parca-aciklama{grid-column:2;color:var(--acikgri);font-size:.88rem;margin-top:.15rem}
+
+.parca.bilinmeyen .parca-metin{color:var(--acikgri)}
+.parca.bilinmeyen .parca-baslik{color:var(--acikgri);font-weight:400}
+
+@media (max-width:560px){
+  .parca{grid-template-columns:1fr;gap:.1rem}
+  .parca-baslik,.parca-aciklama{grid-column:1}
+  .parca-baslik{grid-row:auto}
+}
+</style>
+</head>
+
+<body>
+<main class="sayfa">
+
+  <a class="geri" href="/">← lyda.info</a>
+
+  <h1>Model Dosya Adı Çözücü</h1>
+  <p class="giris">Model indirirken karşına çıkan <code>flux1-dev-Q4_K_S.gguf</code> gibi adlar rastgele değil — her parçası bir şey söylüyor. Dosya adını yapıştır, çözeyim.</p>
+
+  <label for="dosya">Dosya adı</label>
+  <input id="dosya" type="text" value="flux1-dev-Q4_K_S.gguf" spellcheck="false" autocomplete="off" placeholder="model-adi-fp8.safetensors">
+
+  <div class="ornekler" id="ornekler"></div>
+
+  <div class="ozet" id="ozet"></div>
+
+  <ul class="parcalar" id="parcalar"></ul>
+
+  <h2 class="bolum-baslik">Hangisini indirmeli</h2>
+  <p class="giris" style="margin-top:0">Ekran kartın yetiyorsa <strong>fp16</strong> veya <strong>bf16</strong> safetensors al — referans kalite budur. Yetmiyorsa modeli küçültmek yerine quantize edilmiş halini indir: <code>Q8_0</code> gözle ayırt edilemez, <code>Q4_K_M</code> boyut ve kalite arasında makul bir orta yol. <code>Q2</code> ve <code>nf4</code> ancak başka seçenek kalmayınca.</p>
+  <p class="giris"><code>.ckpt</code> uzantılı dosyalardan kaçın. Python'un pickle yapısını kullanırlar ve açıldıklarında kod çalıştırabilirler. Aynı modelin <code>.safetensors</code> hali varsa her zaman onu tercih et.</p>
+
+  <footer>
+    <div class="komsu">
+      <a href="/sozluk/">Sözlük</a>
+      <a href="/araclar/cozunurluk/">Çözünürlük seçici</a>
+      <a href="/araclar/hatalar/">Hata sözlüğü</a>
+      <a href="/rehber/">ComfyUI Rehberi</a>
+    </div>
+    Tanımadığı bir parça çıkarsa <a href="mailto:lyda@lyda.info">yaz</a>, eklerim. · <a href="/">lyda.info</a>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  /* Sözlük — uzun ve özel olanlar önce gelmeli, kısa olanın
+     içine girmesin diye eşleşen aralıklar işaretleniyor. */
+  var SOZLUK = [
+    /* ---- Quantization ---- */
+    {t:["q2_k","q2_k_s","q2_k_m"], k:"Quantization", b:"2 bit", a:"En küçük GGUF seviyesi. Kalite kaybı belirgin; ancak başka seçenek yoksa."},
+    {t:["q3_k_s","q3_k_m","q3_k_l","q3_k"], k:"Quantization", b:"3 bit", a:"Çok küçük. Detaylarda ve metinde bozulma görülür."},
+    {t:["q4_k_s","q4_k_m","q4_0","q4_1","q4_k"], k:"Quantization", b:"4 bit", a:"Boyut ve kalite arasında yaygın tercih. Sondaki K_M, K_S'den biraz büyük ve biraz daha iyi."},
+    {t:["q5_k_s","q5_k_m","q5_0","q5_1","q5_k"], k:"Quantization", b:"5 bit", a:"4 bitin üstü. Fark küçük ama dosya büyüyor."},
+    {t:["q6_k"], k:"Quantization", b:"6 bit", a:"Orijinale yakın. VRAM'in ucu ucuna yetiyorsa iyi seçim."},
+    {t:["q8_0","q8_k","q8"], k:"Quantization", b:"8 bit", a:"Orijinalden gözle ayırt edilemez. Dosya büyük ama fp16'dan küçük."},
+    {t:["nf4"], k:"Quantization", b:"NormalFloat 4 bit", a:"bitsandbytes'ın 4 bit biçimi. Çok küçük, kalite kaybı açık."},
+
+    /* ---- Hassasiyet ---- */
+    {t:["fp8_e4m3fn","e4m3fn","e4m3"], k:"Hassasiyet", b:"fp8 (e4m3)", a:"8 bitin hassasiyeti yüksek varyantı. Görsel modellerde yaygın kullanılan fp8 türü."},
+    {t:["fp8_e5m2","e5m2"], k:"Hassasiyet", b:"fp8 (e5m2)", a:"8 bitin geniş aralıklı varyantı. Taşmaya dayanıklı, hassasiyeti e4m3'ten düşük."},
+    {t:["fp8","float8"], k:"Hassasiyet", b:"8 bit kayan nokta", a:"fp16'nın yarısı kadar yer kaplar. 40 serisi ve üstü kartlarda hızlıdır, her modelde temiz çalışmaz."},
+    {t:["bf16","bfloat16"], k:"Hassasiyet", b:"bfloat16", a:"fp16 ile aynı boyutta ama sayı aralığı geniş. Taşma kaynaklı siyah görsellere karşı daha dayanıklı."},
+    {t:["fp16","float16","half"], k:"Hassasiyet", b:"16 bit kayan nokta", a:"Standart. Görsel üretimde kalite kaybı göz ardı edilebilir."},
+    {t:["fp32","float32","full"], k:"Hassasiyet", b:"32 bit kayan nokta", a:"Tam hassasiyet. Dosya iki katı, üretimde kazancı yok."},
+
+    /* ---- Dosya biçimi ---- */
+    {t:["safetensors","sft"], k:"Dosya biçimi", b:"safetensors", a:"Güvenli biçim. Sadece veri taşır, kod çalıştıramaz. Tercih edilmesi gereken budur."},
+    {t:["gguf"], k:"Dosya biçimi", b:"GGUF", a:"Quantize edilmiş ağırlık biçimi. Aynı modelin çok daha az VRAM isteyen hali."},
+    {t:["ckpt"], k:"Dosya biçimi", b:"checkpoint (eski)", a:"Python pickle tabanlı. Açıldığında kod çalıştırabilir — safetensors varsa onu kullan."},
+    {t:["pth","pt","bin"], k:"Dosya biçimi", b:"PyTorch dosyası", a:"Pickle tabanlı. Genelde upscaler ve yardımcı modellerde görülür."},
+
+    /* ---- Model ailesi ---- */
+    {t:["flux1","flux-1","flux"], k:"Model ailesi", surum:true, b:"Flux", a:"Black Forest Labs'ın modeli. Metin yazmada ve anatomi tutarlılığında güçlü, karşılığında ağır."},
+    {t:["sd_xl","sdxl","sd-xl"], k:"Model ailesi", surum:true, b:"Stable Diffusion XL", a:"1 megapiksel tabanlı Stable Diffusion sürümü. Pony ve Illustrious dahil çok sayıda modelin temeli."},
+    {t:["sd3"], k:"Model ailesi", surum:true, b:"Stable Diffusion 3", a:"Stability AI'ın üçüncü nesil mimarisi."},
+    {t:["sd15","sd_15","v1-5","v1_5"], k:"Model ailesi", b:"Stable Diffusion 1.5", a:"512 piksel tabanlı eski nesil. Hafif olduğu için hâlâ yaygın."},
+    {t:["pony"], k:"Model ailesi", surum:true, b:"Pony Diffusion", a:"SDXL tabanlı, etiket temelli prompt'la çalışan topluluk modeli."},
+    {t:["illustrious","illust"], k:"Model ailesi", surum:true, b:"Illustrious XL", a:"SDXL tabanlı, illüstrasyon odaklı model."},
+    {t:["animagine"], k:"Model ailesi", surum:true, b:"Animagine XL", a:"SDXL tabanlı anime modeli."},
+    {t:["qwen"], k:"Model ailesi", surum:true, b:"Qwen-Image", a:"Alibaba'nın görsel üretim modeli."},
+    {t:["z-image","zimage","z_image"], k:"Model ailesi", surum:true, b:"Z-Image", a:"Az adımda çalışan hızlı görsel modeli."},
+    {t:["hunyuan"], k:"Model ailesi", surum:true, b:"HunyuanVideo", a:"Tencent'in video üretim modeli."},
+    {t:["wan"], k:"Model ailesi", surum:true, b:"Wan", a:"Açık ağırlıklı video üretim modeli."},
+    {t:["ltxv","ltx"], k:"Model ailesi", surum:true, b:"LTX Video", a:"Hızlı video üretim modeli."},
+    {t:["cogvideo","cogvideox"], k:"Model ailesi", surum:true, b:"CogVideoX", a:"Açık ağırlıklı video modeli."},
+    {t:["kolors"], k:"Model ailesi", surum:true, b:"Kolors", a:"Kuaishou'nun görsel üretim modeli."},
+    {t:["juggernaut"], k:"Model ailesi", surum:true, b:"Juggernaut", a:"SDXL tabanlı, gerçekçilik odaklı topluluk modeli."},
+    {t:["dreamshaper"], k:"Model ailesi", surum:true, b:"DreamShaper", a:"Çok amaçlı, yaygın kullanılan topluluk modeli."},
+    {t:["realvis","realvisxl"], k:"Model ailesi", surum:true, b:"RealVisXL", a:"SDXL tabanlı fotogerçekçilik modeli."},
+    {t:["epicrealism"], k:"Model ailesi", surum:true, b:"epiCRealism", a:"Gerçekçi portre ve sahne odaklı topluluk modeli."},
+    {t:["sana"], k:"Model ailesi", surum:true, b:"SANA", a:"NVIDIA'nın hafif ve hızlı görsel modeli."},
+
+    /* ---- Sürüm ve varyant ---- */
+    {t:["schnell"], k:"Varyant", b:"schnell", a:"Almanca 'hızlı'. 1–4 adımda sonuç veren damıtılmış sürüm. CFG 1'de çalışır."},
+    {t:["dev"], k:"Varyant", b:"dev", a:"Flux'un açık ağırlıklı sürümü. Rehberlik damıtılmış olduğu için klasik CFG yerine guidance değeri kullanır."},
+    {t:["pro"], k:"Varyant", b:"pro", a:"Kapalı sürüm, yalnızca API üzerinden. Yerelde çalıştırılamaz."},
+    {t:["kontext"], k:"Varyant", b:"Kontext", a:"Flux'un görsel düzenleme sürümü. Var olan bir görseli talimatla değiştirir."},
+    {t:["turbo"], k:"Varyant", b:"turbo", a:"Az adımlı damıtma. 4–8 adımda çalışır, CFG 1'de bırakılır."},
+    {t:["lightning"], k:"Varyant", b:"Lightning", a:"SDXL için az adımlı damıtma yöntemi."},
+    {t:["hyper"], k:"Varyant", b:"Hyper-SD", a:"Az adımlı damıtma yöntemi. Tek adıma kadar inebilir."},
+    {t:["lcm"], k:"Varyant", b:"LCM", a:"Latent Consistency Model. Az adımda üretim için damıtılmış."},
+    {t:["refiner"], k:"Varyant", b:"refiner", a:"SDXL'in ikinci aşama modeli. Son adımları işleyip detay ekler, tek başına kullanılmaz."},
+    {t:["base"], k:"Varyant", b:"base", a:"Temel model, ince ayar yapılmamış hali."},
+    {t:["inpainting","inpaint"], k:"Varyant", b:"inpaint", a:"Maskelenmiş bölgeyi yeniden üretmek için eğitilmiş sürüm."},
+    {t:["instruct"], k:"Varyant", b:"instruct", a:"Talimat takip etmek üzere ayarlanmış sürüm."},
+    {t:["distill","distilled"], k:"Varyant", b:"damıtılmış", a:"Büyük modelden öğretilerek küçültülmüş veya hızlandırılmış sürüm."},
+    {t:["i2v"], k:"Varyant", b:"görselden videoya", a:"Başlangıç görseli alıp video üretir."},
+    {t:["t2v"], k:"Varyant", b:"metinden videoya", a:"Yalnızca prompt'tan video üretir."},
+
+    /* ---- Parça türü ---- */
+    {t:["vae"], k:"Parça", b:"VAE", a:"Latent ile piksel arasında çeviri yapan parça. Yanlışı solgun veya bozuk renkli çıktı verir."},
+    {t:["t5xxl","t5-xxl","t5"], k:"Parça", b:"T5 metin kodlayıcı", a:"Uzun ve karmaşık prompt'ları işleyen kodlayıcı. Flux ve SD3 kullanır."},
+    {t:["clip_l","clip-l"], k:"Parça", b:"CLIP-L", a:"Metin kodlayıcının küçük parçası."},
+    {t:["clip_g","clip-g"], k:"Parça", b:"CLIP-G", a:"SDXL'in ikinci metin kodlayıcısı."},
+    {t:["clip","text_encoder","textencoder"], k:"Parça", b:"metin kodlayıcı", a:"Prompt'u modelin anlayacağı sayılara çevirir."},
+    {t:["unet","diffusion_model","diffusion"], k:"Parça", b:"difüzyon modeli", a:"Asıl üretimi yapan ağırlıklar. Tek başına gelirse VAE ve kodlayıcıyı ayrıca indirmen gerekir."},
+    {t:["controlnet","control"], k:"Parça", b:"ControlNet", a:"Görselin yapısını dışarıdan dayatan model."},
+    {t:["ipadapter","ip-adapter"], k:"Parça", b:"IPAdapter", a:"Referans görselin stilini veya konusunu aktaran model."},
+    {t:["lycoris","locon","loha","lora"], k:"Parça", b:"LoRA", a:"Modelin davranışını değiştiren küçük ek katman. Tek başına çalışmaz, bir modelin üstüne binir."},
+    {t:["embedding","textual_inversion"], k:"Parça", b:"embedding", a:"Prompt'ta tek kelimeyle çağrılan küçük öğretim dosyası."},
+    {t:["upscaler","esrgan","realesrgan"], k:"Parça", b:"büyütme modeli", a:"Görseli yeniden üretmeden büyütür ve keskinleştirir."},
+
+    /* ---- Budama ---- */
+    {t:["emaonly","ema-only","ema_only"], k:"Budama", b:"yalnızca EMA", a:"Sadece üretim için gereken ağırlıkları tutar. Dosya küçülür, üretim kalitesi değişmez."},
+    {t:["no-ema","noema","no_ema"], k:"Budama", b:"EMA'sız", a:"EMA ağırlıkları çıkarılmış. Eğitim ve birleştirme için kullanılır."},
+    {t:["pruned"], k:"Budama", b:"budanmış", a:"Eğitim için gereken fazlalıklar atılmış. Üretim kalitesi aynı, dosya küçük."},
+    {t:["ema"], k:"Budama", b:"EMA", a:"Eğitim boyunca ortalaması alınan ağırlıklar. Üretimde kullanılan genelde budur."},
+
+    /* ---- ControlNet türleri ---- */
+    {t:["openpose","pose"], k:"Koşullandırma", b:"poz", a:"İskelet pozunu kaynak alır."},
+    {t:["canny"], k:"Koşullandırma", b:"kenar", a:"Kenar çizgilerini kaynak alır."},
+    {t:["depth"], k:"Koşullandırma", b:"derinlik", a:"Derinlik haritasını kaynak alır."},
+    {t:["lineart"], k:"Koşullandırma", b:"çizgi", a:"Çizgi sanatını kaynak alır."},
+    {t:["tile"], k:"Koşullandırma", b:"tile", a:"Büyütme sırasında parçaların tutarlı kalmasını sağlar."},
+    {t:["scribble"], k:"Koşullandırma", b:"karalama", a:"Kaba çizimi kaynak alır."},
+
+    /* ---- Diğer ---- */
+    {t:["xl"], k:"Mimari", b:"XL tabanlı", a:"SDXL mimarisi üzerine kurulmuş."},
+    {t:["v2","v3","v4","v5","v6"], k:"Sürüm", b:"sürüm numarası", a:"Yapımcının kaçıncı sürümü yayınladığını gösterir."}
+  ];
+
+  var girdi = document.getElementById("dosya");
+  var ozetEl = document.getElementById("ozet");
+  var listeEl = document.getElementById("parcalar");
+
+  var ORNEKLER = [
+    "flux1-dev-Q4_K_S.gguf",
+    "sd_xl_base_1.0.safetensors",
+    "flux1-dev-fp8_e4m3fn.safetensors",
+    "v1-5-pruned-emaonly.ckpt",
+    "t5xxl_fp16.safetensors",
+    "ponyDiffusionV6XL_v6.safetensors",
+    "wan2.1_i2v_480p_14B_bf16.safetensors"
+  ];
+
+  /* Sınır noktaları: ayıraçlar (-_. /) ve büyük harfe geçişler.
+     Böylece hem flux1-dev hem ponyDiffusionV6XL çözülebiliyor. */
+  function sinirlar(ad) {
+    var s = {};
+    s[0] = true; s[ad.length] = true;
+    for (var i = 0; i < ad.length; i++) {
+      var c = ad[i];
+      var noktaSurum = c === "." && i > 0 && i < ad.length - 1 &&
+                       /[0-9]/.test(ad[i - 1]) && /[0-9]/.test(ad[i + 1]);
+      if (!noktaSurum && "-_. /".indexOf(c) !== -1) { s[i] = true; s[i + 1] = true; }
+      else if (i > 0 && /[a-z0-9]/.test(ad[i - 1]) && /[A-ZÇĞİÖŞÜ]/.test(c)) s[i] = true;
+    }
+    return s;
+  }
+
+  function coz(ad) {
+    var d = ad.toLowerCase();
+    var sinir = sinirlar(ad);
+    var alinan = new Array(d.length).fill(false);
+    var bulunan = [];
+
+    function bos(bas, son) {
+      for (var i = bas; i < son; i++) if (alinan[i]) return false;
+      return true;
+    }
+    function isaretle(bas, son) { for (var i = bas; i < son; i++) alinan[i] = true; }
+
+    SOZLUK.forEach(function (giris) {
+      giris.t.forEach(function (token) {
+        var ara = 0, bas;
+        while ((bas = d.indexOf(token, ara)) !== -1) {
+          ara = bas + 1;
+          if (!sinir[bas]) continue;
+
+          var son = bas + token.length;
+
+          // Model ailelerinde sürüm eki tokene dahil: wan2.1, sd3.5
+          if (giris.surum && !sinir[son]) {
+            var u = son;
+            while (u < d.length && /[0-9.]/.test(d[u])) u++;
+            if (u > son && sinir[u] && d[u - 1] !== ".") son = u;
+          }
+
+          if (!sinir[son] || !bos(bas, son)) continue;
+
+          isaretle(bas, son);
+          bulunan.push({ bas:bas, metin:ad.slice(bas, son), k:giris.k, b:giris.b, a:giris.a });
+        }
+      });
+    });
+
+    // Eşleşmeyen parçalar
+    var basla = -1;
+    for (var i = 0; i <= d.length; i++) {
+      var kes = i === d.length || alinan[i] ||
+                ("-_. /".indexOf(d[i]) !== -1 && !(d[i] === "." && i > 0 && i < d.length - 1 &&
+                                                    /[0-9]/.test(d[i - 1]) && /[0-9]/.test(d[i + 1]))) ||
+                (basla !== -1 && sinir[i]);
+
+      if (!kes) { if (basla === -1) basla = i; }
+      else {
+        if (basla !== -1) { bulunan.push(artik(ad, basla, i)); basla = -1; }
+        if (!(i === d.length || alinan[i] || "-_. /".indexOf(d[i]) !== -1)) basla = i;
+      }
+    }
+
+    bulunan.sort(function (a, b) { return a.bas - b.bas; });
+
+    // "14" + "B" bitişikse tek bir parametre sayısıdır
+    for (var n = 0; n < bulunan.length - 1; n++) {
+      var a = bulunan[n], s2 = bulunan[n + 1];
+      if (!a.b || a.k === "Sürüm" || a.k === "Tanınmadı") {
+        if (s2.bas === a.bas + a.metin.length &&
+            /^\d+(\.\d+)?$/.test(a.metin) && /^[bm]$/i.test(s2.metin)) {
+          bulunan.splice(n, 2, artik(ad, a.bas, s2.bas + s2.metin.length));
+        }
+      }
+    }
+
+    return bulunan;
+  }
+
+  function artik(ad, bas, son) {
+    var ham = ad.slice(bas, son);
+    if (/^v?\d+(\.\d+)*$/i.test(ham))
+      return { bas:bas, metin:ham, k:"Sürüm", b:"sürüm numarası",
+               a:"Modelin kaçıncı sürümü olduğunu gösterir. Aynı ailenin farklı sürümleri farklı prompt alışkanlıkları isteyebilir." };
+    if (/^\d+p$/i.test(ham))
+      return { bas:bas, metin:ham, k:"Çözünürlük", b:"çözünürlük sınıfı",
+               a:"Video modellerinde eğitildiği kare yüksekliği. Bunun üstüne çıkmak kalite getirmez." };
+    if (/^\d+(\.\d+)?b$/i.test(ham))
+      return { bas:bas, metin:ham, k:"Boyut", b:"parametre sayısı",
+               a:"Modelin kaç milyar parametre taşıdığı. Büyüdükçe kalite artar, VRAM ihtiyacı da artar." };
+    return { bas:bas, metin:ham, k:"Tanınmadı", b:null, a:null };
+  }
+
+  function ozetle(parcalar) {
+    var bul = function (k) {
+      for (var i = 0; i < parcalar.length; i++) if (parcalar[i].k === k) return parcalar[i].b;
+      return null;
+    };
+    var aile = bul("Model ailesi"), varyant = bul("Varyant"), bicim = bul("Dosya biçimi");
+    var q = bul("Quantization"), h = bul("Hassasiyet"), parcaTur = bul("Parça");
+
+    if (!aile && !bicim && !q && !h && !parcaTur) return null;
+
+    var c = [];
+    if (aile) c.push(aile + (varyant ? " " + varyant : ""));
+    else if (varyant) c.push(varyant + " sürümü");
+    if (parcaTur) c.push(parcaTur);
+    if (q) c.push(q + " quantize edilmiş");
+    else if (h) c.push(h);
+    if (bicim) c.push(bicim + " dosyası");
+
+    return c.join(", ") + ".";
+  }
+
+  function yaz() {
+    var ad = girdi.value.trim();
+    listeEl.innerHTML = "";
+
+    if (!ad) {
+      ozetEl.className = "ozet bos";
+      ozetEl.textContent = "Bir dosya adı yaz ya da aşağıdaki örneklerden birine bas.";
+      return;
+    }
+
+    var parcalar = coz(ad);
+    var ozet = ozetle(parcalar);
+
+    if (ozet) {
+      ozetEl.className = "ozet";
+      ozetEl.textContent = ozet;
+    } else {
+      ozetEl.className = "ozet bos";
+      ozetEl.textContent = "Bu addaki hiçbir parçayı tanıyamadım. Yapımcının kendi adlandırması olabilir.";
+    }
+
+    parcalar.forEach(function (p) {
+      var li = document.createElement("li");
+      li.className = "parca" + (p.b ? "" : " bilinmeyen");
+      li.innerHTML =
+        '<span class="parca-metin">' + p.metin + '</span>' +
+        '<span class="parca-tur">' + p.k + '</span>' +
+        '<span class="parca-baslik">' + (p.b || "tanınmadı") + '</span>' +
+        '<span class="parca-aciklama">' + (p.a || "Model adı, sürüm numarası ya da yapımcının kendi etiketi olabilir.") + '</span>';
+      listeEl.appendChild(li);
+    });
+  }
+
+  var ornekKutu = document.getElementById("ornekler");
+  ORNEKLER.forEach(function (o) {
+    var d = document.createElement("button");
+    d.type = "button";
+    d.className = "ornek";
+    d.textContent = o;
+    d.addEventListener("click", function () { girdi.value = o; yaz(); girdi.focus(); });
+    ornekKutu.appendChild(d);
+  });
+
+  girdi.addEventListener("input", yaz);
+  yaz();
+})();
+</script>
+
+</body>
+</html>
