@@ -416,32 +416,36 @@ footer{
 }
 .alan-tum:hover,.alan-tum:focus-visible{color:var(--kirmizi)}
 
-/* ---------- Tuval ---------- */
-.tuval{position:relative;margin-top:2rem}
+/* ---------- Kategoriler ---------- */
+.kategori{margin-top:2.1rem}
+.kategori:first-of-type{margin-top:1.8rem}
 
-#kablolar{
-  position:absolute;
-  inset:0;
-  width:100%;height:100%;
-  pointer-events:none;
-  overflow:visible;
+.kategori-ad{
+  color:var(--kirmizi);
+  font-size:.8rem;
+  font-weight:500;
+  padding-bottom:.55rem;
+  border-bottom:1px solid rgba(232,51,44,.3);
+  margin-bottom:1.1rem;
 }
+
+.kategori-ad span{color:var(--acikgri);font-weight:400;margin-left:.55rem}
 
 .dugumler{
   list-style:none;
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:clamp(1.8rem,4vw,2.6rem) clamp(2.5rem,7vw,4.5rem);
+  grid-template-columns:repeat(auto-fill,minmax(228px,1fr));
+  gap:1rem;
 }
 
-@media (max-width:680px){
-  .dugumler{grid-template-columns:1fr;gap:2.2rem}
-}
+.dugumler li{display:flex}
 
 /* ---------- Düğüm ---------- */
 .dugum{
   position:relative;
-  display:block;
+  display:flex;
+  flex-direction:column;
+  width:100%;
   padding:0;
   border:1px solid rgba(255,255,255,.13);
   border-radius:7px;
@@ -482,7 +486,7 @@ footer{
 .dugum-ad{font-size:.92rem;font-weight:500;line-height:1.25}
 
 .dugum-govde{
-  display:block;
+  flex:1;
   padding:.7rem .85rem .85rem;
   color:var(--acikgri);
   font-size:.83rem;
@@ -500,38 +504,17 @@ footer{
   flex-shrink:0;
 }
 
-/* Giriş ve çıkış uçları */
-.uc{
-  position:absolute;
-  top:1.32rem;
-  width:8px;height:8px;
-  border-radius:50%;
-  background:var(--siyah);
-  border:1px solid var(--kirmizi);
-  transition:background .2s ease;
-}
-.uc-giris{left:-4px}
-.uc-cikis{right:-4px}
 
-.dugum:hover .uc{background:var(--kirmizi)}
-
-/* Tek sütunda akış yukarıdan aşağı — uçlar da öyle */
-@media (max-width:680px){
-  .uc-giris{left:50%;top:-4px;transform:translateX(-50%)}
-  .uc-cikis{left:50%;right:auto;top:auto;bottom:-4px;transform:translateX(-50%)}
-}
 
 /* Hazır olan düğüm */
 .dugum.hazir{border-color:rgba(232,51,44,.5)}
 .dugum.hazir .dugum-ust{background:rgba(232,51,44,.1)}
-.dugum.hazir .uc{background:var(--kirmizi)}
 .dugum.hazir .dugum-etiket{color:var(--kirmizi);border-color:rgba(232,51,44,.4)}
 
 /* Henüz yayında olmayanlar */
 .dugum.kilitli .dugum-ad{color:var(--acikgri);font-weight:400}
 .dugum.kilitli .dugum-govde{color:#5E5E5E}
 .dugum.kilitli .dugum-no{color:rgba(232,51,44,.5)}
-.dugum.kilitli .uc{border-color:rgba(232,51,44,.45)}
 
 @keyframes kabloIn{to{transform:scaleY(1)}}
 @keyframes satirIn{to{opacity:1;transform:translateY(0)}}
@@ -677,95 +660,93 @@ footer{
     <a class="alan-tum" href="/rehber/">Rehbere git →</a>
   </div>
 
-  <div class="tuval">
-    <svg id="kablolar" aria-hidden="true"></svg>
-    <ol class="dugumler">
-      <li>
-        <a class="dugum hazir" href="/sozluk/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">✦</span>
-            <span class="dugum-ad">Sözlük</span>
-            <span class="dugum-etiket">hazır</span>
-          </span>
-          <span class="dugum-govde">45 terim, aranabilir. Hangi bölümde olursan ol takıldığında buraya bak.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">01</span>
-            <span class="dugum-ad">Kurulum</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">ComfyUI'ı kurmak, model klasörleri, ilk açılışta ne yapılır.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">02</span>
-            <span class="dugum-ad">Arayüz ve node mantığı</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">Düğümler neden böyle bağlanıyor. Burayı anlarsan gerisi ezber olmaktan çıkar.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">03</span>
-            <span class="dugum-ad">İlk görselin</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">Hazır bir workflow ile üretime başlamak.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">04</span>
-            <span class="dugum-ad">Workflow'u sıfırdan kurmak</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">Her düğümü kendin bağlayarak aynı sonucu üretmek.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">05</span>
-            <span class="dugum-ad">KSampler ayarları</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">Steps, CFG, sampler, scheduler, seed, denoise.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-      <li>
-        <a class="dugum kilitli" href="/rehber/">
-          <span class="uc uc-giris" aria-hidden="true"></span>
-          <span class="dugum-ust">
-            <span class="dugum-no" aria-hidden="true">06</span>
-            <span class="dugum-ad">Workflow'ları yönetmek</span>
-            <span class="dugum-etiket">yakında</span>
-          </span>
-          <span class="dugum-govde">Kaydetmek, paylaşmak, başkalarının akışlarını çalıştırmak.</span>
-          <span class="uc uc-cikis" aria-hidden="true"></span>
-        </a>
-      </li>
-    </ol>
-  </div>
+    <div class="kategori">
+      <h3 class="kategori-ad">Başlangıç<span>ComfyUI'ı çalışır hale getirmek</span></h3>
+      <ul class="dugumler">
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">01</span>
+              <span class="dugum-ad">Kurulum</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Kurmak, model klasörleri, ilk açılış.</span>
+          </a>
+        </li>
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">02</span>
+              <span class="dugum-ad">Arayüz ve node mantığı</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Düğümler neden böyle bağlanıyor.</span>
+          </a>
+        </li>
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">03</span>
+              <span class="dugum-ad">İlk görselin</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Hazır bir workflow ile üretmek.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kategori">
+      <h3 class="kategori-ad">Workflow<span>Kendi akışını kurmak</span></h3>
+      <ul class="dugumler">
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">04</span>
+              <span class="dugum-ad">Sıfırdan workflow</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Her düğümü kendin bağlayarak.</span>
+          </a>
+        </li>
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">05</span>
+              <span class="dugum-ad">KSampler ayarları</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Steps, CFG, sampler, seed, denoise.</span>
+          </a>
+        </li>
+        <li>
+          <a class="dugum kilitli" href="/rehber/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">06</span>
+              <span class="dugum-ad">Workflow'ları yönetmek</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Kaydetmek, paylaşmak, çalıştırmak.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kategori">
+      <h3 class="kategori-ad">Başvuru<span>Her zaman açık kalabilir</span></h3>
+      <ul class="dugumler">
+        <li>
+          <a class="dugum hazir" href="/sozluk/">
+            <span class="dugum-ust">
+              <span class="dugum-no" aria-hidden="true">✦</span>
+              <span class="dugum-ad">Sözlük</span>
+              <span class="dugum-etiket">hazır</span>
+            </span>
+            <span class="dugum-govde">45 terim, aranabilir. Takıldığında buraya bak.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
 </section>
 
@@ -783,67 +764,6 @@ footer{
 </div>
 
 <script>
-/* ---------- Düğümleri birbirine bağlayan kablolar ----------
-   Konumlar yerleşimden sonra ölçülüyor, böylece her ekran
-   genişliğinde ve yeniden boyutlandırmada doğru çiziliyor. */
-(function () {
-  var svg = document.getElementById("kablolar");
-  var tuval = document.querySelector(".tuval");
-  if (!svg || !tuval) return;
-
-  var dugumler = Array.prototype.slice.call(document.querySelectorAll(".dugum"));
-  var NS = "http://www.w3.org/2000/svg";
-
-  function ciz() {
-    svg.innerHTML = "";
-    var t = tuval.getBoundingClientRect();
-    var dikey = window.matchMedia("(max-width:680px)").matches;
-    svg.setAttribute("viewBox", "0 0 " + t.width + " " + t.height);
-
-    for (var i = 0; i < dugumler.length - 1; i++) {
-      var a = dugumler[i].querySelector(".uc-cikis").getBoundingClientRect();
-      var b = dugumler[i + 1].querySelector(".uc-giris").getBoundingClientRect();
-
-      var x1 = a.left + a.width / 2 - t.left, y1 = a.top + a.height / 2 - t.top;
-      var x2 = b.left + b.width / 2 - t.left, y2 = b.top + b.height / 2 - t.top;
-
-      var d;
-      if (dikey) {
-        // Tek sütun: yukarıdan aşağı inen kablo
-        var dy = Math.max(14, (y2 - y1) * 0.45);
-        d = "M " + x1 + " " + y1 +
-            " C " + x1 + " " + (y1 + dy) +
-            ", " + x2 + " " + (y2 - dy) +
-            ", " + x2 + " " + y2;
-      } else {
-        // İki sütun: aynı satırda yumuşak kavis, satır atlayınca dar S
-        var ayniSatir = Math.abs(y2 - y1) < 20;
-        var dx = ayniSatir ? Math.max(38, (x2 - x1) * 0.5) : 34;
-        var k1 = Math.min(t.width, x1 + dx);
-        var k2 = Math.max(0, x2 - dx);
-        d = "M " + x1 + " " + y1 +
-            " C " + k1 + " " + y1 +
-            ", " + k2 + " " + y2 +
-            ", " + x2 + " " + y2;
-      }
-
-      var yol = document.createElementNS(NS, "path");
-      yol.setAttribute("d", d);
-      yol.setAttribute("fill", "none");
-      yol.setAttribute("stroke", "rgba(232,51,44,.38)");
-      yol.setAttribute("stroke-width", "1.5");
-      yol.setAttribute("stroke-linecap", "round");
-      if (i === 0) yol.setAttribute("stroke-dasharray", "4 4");
-      svg.appendChild(yol);
-    }
-  }
-
-  ciz();
-  window.addEventListener("resize", ciz);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ciz);
-  window.addEventListener("load", ciz);
-})();
-
 document.querySelectorAll("button.ac").forEach(function (dugme) {
   dugme.addEventListener("click", function () {
     var satir = dugme.closest("li");
