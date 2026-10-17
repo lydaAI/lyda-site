@@ -177,6 +177,7 @@ h1{
 .baglantilar>li:nth-child(2){animation-delay:.56s}
 .baglantilar>li:nth-child(3){animation-delay:.70s}
 .baglantilar>li:nth-child(4){animation-delay:.84s}
+.baglantilar>li:nth-child(5){animation-delay:.98s}
 
 /* Alt satırlar kapalı başlıyor, ayrıca belirmelerine gerek yok */
 .altlar li{opacity:1;transform:none;animation:none}
@@ -194,6 +195,80 @@ h1{
 
 .baglantilar>li:hover::before,
 .baglantilar>li:focus-within::before{background:var(--kirmizi)}
+
+/* ---------- Öne çıkan düğüm: rehber ---------- */
+.one-cikan::before{
+  width:13px!important;height:13px!important;
+  left:calc(-1.5rem - 2px)!important;
+  top:1.5rem!important;
+  background:var(--kirmizi)!important;
+  box-shadow:0 0 0 4px rgba(232,51,44,.15);
+}
+
+a.buyuk{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.25rem 0 1.4rem;
+  border-bottom:1px solid rgba(255,255,255,.13);
+  border-top:1px solid rgba(255,255,255,.13);
+  color:var(--beyaz);
+  text-decoration:none;
+}
+
+a.buyuk:focus-visible{outline:2px solid var(--kirmizi);outline-offset:4px;border-radius:2px}
+
+.buyuk-ad{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:1.32rem;
+  line-height:1.1;
+  letter-spacing:-.01em;
+  font-variation-settings:"SOFT" 40,"WONK" 1;
+  display:block;
+  transition:color .18s ease;
+  view-transition-name:rehber-baslik;
+}
+
+a.buyuk:hover .buyuk-ad,
+a.buyuk:focus-visible .buyuk-ad{color:var(--kirmizi)}
+
+.buyuk-aciklama{
+  display:block;
+  color:var(--acikgri);
+  font-size:.86rem;
+  margin-top:.3rem;
+  max-width:30ch;
+}
+
+/* Bölüm sayıları — kapsamı bir bakışta gösteriyor */
+.siralar{
+  display:flex;
+  gap:.5rem;
+  margin-top:.85rem;
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:.95rem;
+  line-height:1;
+  color:transparent;
+  -webkit-text-stroke:.8px rgba(232,51,44,.5);
+  transition:-webkit-text-stroke-color .25s ease;
+}
+
+a.buyuk:hover .siralar{-webkit-text-stroke-color:var(--kirmizi)}
+
+.siralar span{transition:color .25s ease}
+a.buyuk:hover .siralar span{color:rgba(232,51,44,.2)}
+
+.buyuk-ok{
+  color:var(--kirmizi);
+  font-size:1.1rem;
+  flex-shrink:0;
+  transition:transform .2s ease;
+}
+
+a.buyuk:hover .buyuk-ok{transform:translateX(4px)}
 
 /* ---------- Link satırı ---------- */
 a.satir{
@@ -363,110 +438,6 @@ footer{
 ::view-transition-old(root),
 ::view-transition-new(root){animation-duration:.42s}
 
-/* ---------- Rehber şeridi ---------- */
-.serit-bolum{
-  margin-top:3rem;
-  opacity:0;
-  animation:satirIn .5s ease-out 1.1s forwards;
-}
-
-.serit-ust{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:1rem;
-  padding-left:1.5rem;
-  margin-bottom:.9rem;
-}
-
-.serit-ust h2{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:1.18rem;
-  letter-spacing:-.01em;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  view-transition-name:rehber-baslik;
-}
-
-.serit-tum{
-  color:var(--acikgri);
-  font-size:.82rem;
-  text-decoration:none;
-  white-space:nowrap;
-  transition:color .18s ease;
-}
-.serit-tum:hover,.serit-tum:focus-visible{color:var(--kirmizi)}
-
-.serit{
-  display:flex;
-  gap:.6rem;
-  overflow-x:auto;
-  scroll-snap-type:x proximity;
-  scroll-padding-inline:1.5rem;
-  padding:.2rem 1.5rem .9rem;
-  margin:0 -1.5rem;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(232,51,44,.45) transparent;
-  -webkit-overflow-scrolling:touch;
-  mask-image:linear-gradient(to right,#000 calc(100% - 3rem),transparent 100%);
-  -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 3rem),transparent 100%);
-}
-
-.serit::-webkit-scrollbar{height:4px}
-.serit::-webkit-scrollbar-track{background:transparent}
-.serit::-webkit-scrollbar-thumb{background:rgba(232,51,44,.45);border-radius:100px}
-.serit:hover::-webkit-scrollbar-thumb{background:var(--kirmizi)}
-
-.kart{
-  flex:0 0 auto;
-  width:148px;
-  min-height:158px;
-  scroll-snap-align:start;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:1.4rem;
-  padding:.85rem .9rem 1rem;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;
-  background:rgba(10,10,10,.5);
-  text-decoration:none;
-  color:var(--beyaz);
-  transition:border-color .2s ease,background .2s ease,transform .2s ease;
-}
-
-.kart:hover,.kart:focus-visible{
-  border-color:var(--kirmizi);
-  background:rgba(232,51,44,.08);
-  transform:translateY(-2px);
-}
-
-.kart:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
-
-.kart-sira{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:2.1rem;
-  line-height:1;
-  color:transparent;
-  -webkit-text-stroke:1px rgba(232,51,44,.5);
-  transition:color .2s ease,-webkit-text-stroke-color .2s ease;
-}
-
-.kart:hover .kart-sira{color:rgba(232,51,44,.18);-webkit-text-stroke-color:var(--kirmizi)}
-
-.kart-ad{font-size:.85rem;font-weight:500;line-height:1.3}
-.kart-not{color:#5E5E5E;font-size:.72rem;display:block;margin-top:.2rem}
-
-/* Hazır olan kart */
-.kart.hazir{border-color:rgba(232,51,44,.45);background:rgba(232,51,44,.06)}
-.kart.hazir .kart-sira{
-  color:var(--kirmizi);
-  -webkit-text-stroke:0;
-  font-size:1.6rem;
-}
-.kart.hazir .kart-not{color:var(--kirmizi)}
-
 @keyframes kabloIn{to{transform:scaleY(1)}}
 @keyframes satirIn{to{opacity:1;transform:translateY(0)}}
 @keyframes akisYukari{from{transform:translateY(0)}to{transform:translateY(-50%)}}
@@ -474,7 +445,7 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  h1,.tanim,footer,.baglantilar li,.sosyal,.serit-bolum{opacity:1;transform:none}
+  h1,.tanim,footer,.baglantilar li,.sosyal{opacity:1;transform:none}
   .baglantilar::before{transform:scaleY(1)}
 }
 </style>
@@ -531,6 +502,17 @@ footer{
        ================================================ -->
   <ul class="baglantilar">
 
+    <li class="one-cikan">
+      <a class="buyuk" href="/rehber/">
+        <span>
+          <span class="buyuk-ad">ComfyUI Rehberi</span>
+          <span class="buyuk-aciklama">Sıfırdan kendi workflow'unu kurana kadar, altı bölüm. Sözlük hazır.</span>
+          <span class="siralar" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></span>
+        </span>
+        <span class="buyuk-ok" aria-hidden="true">→</span>
+      </a>
+    </li>
+
     <li>
       <div class="satir-sarmal">
         <a class="satir" href="https://youtube.com/@lydaai" target="_blank" rel="noopener">
@@ -576,6 +558,13 @@ footer{
     </li>
 
     <li>
+      <a class="satir" href="/sozluk/">
+        <span class="ad"><i class="fa-solid fa-book" aria-hidden="true"></i>Sözlük</span>
+        <span class="not">45 terim</span>
+      </a>
+    </li>
+
+    <li>
       <a class="satir" href="mailto:lyda@lyda.info">
         <span class="ad"><i class="fa-solid fa-envelope" aria-hidden="true"></i>İletişim</span>
         <span class="not">lyda@lyda.info</span>
@@ -583,58 +572,6 @@ footer{
     </li>
 
   </ul>
-
-  <!-- ================================================
-       REHBER ŞERİDİ — yatay kaydırılır
-       Bölüm yayına girince kartın href'ini değiştir,
-       .kart-not içindeki "yakında" yazısını sil.
-       ================================================ -->
-  <section class="serit-bolum" aria-labelledby="serit-baslik">
-
-    <div class="serit-ust">
-      <h2 id="serit-baslik">ComfyUI Rehberi</h2>
-      <a class="serit-tum" href="/rehber/">Tümü →</a>
-    </div>
-
-    <div class="serit">
-
-      <a class="kart hazir" href="/sozluk/">
-        <span class="kart-sira" aria-hidden="true">✦</span>
-        <span class="kart-ad">Sözlük<span class="kart-not">45 terim · hazır</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">01</span>
-        <span class="kart-ad">Kurulum<span class="kart-not">yakında</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">02</span>
-        <span class="kart-ad">Arayüz ve node mantığı<span class="kart-not">yakında</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">03</span>
-        <span class="kart-ad">İlk görselin<span class="kart-not">yakında</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">04</span>
-        <span class="kart-ad">Workflow'u sıfırdan kurmak<span class="kart-not">yakında</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">05</span>
-        <span class="kart-ad">KSampler ayarları<span class="kart-not">yakında</span></span>
-      </a>
-
-      <a class="kart" href="/rehber/">
-        <span class="kart-sira" aria-hidden="true">06</span>
-        <span class="kart-ad">Workflow'ları yönetmek<span class="kart-not">yakında</span></span>
-      </a>
-
-    </div>
-  </section>
 
   <footer>
     <span>lyda.info</span>
