@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ComfyUI Hata Sözlüğü — Lyda AI</title>
+<meta name="description" content="ComfyUI'da aldığın hata ne anlama geliyor ve nasıl çözülür. CUDA out of memory, kırmızı düğümler, mat1 and mat2, siyah görsel ve diğerleri.">
+
+<meta property="og:site_name" content="Lyda AI">
+<meta property="og:title" content="ComfyUI Hata Sözlüğü">
+<meta property="og:description" content="Aldığın hata mesajını ara, ne demek olduğunu ve nasıl çözüleceğini gör.">
+<meta property="og:url" content="https://lyda.info/araclar/hatalar/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:image" content="https://lyda.info/paylasim.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lyda.info/paylasim.png">
+<meta name="theme-color" content="#E8332C">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/araclar/stil.css">
+
+<style>
+.araclar-ust{position:sticky;top:0;z-index:5;background:var(--siyah);padding:1.6rem 0 1rem;margin-top:1.6rem}
+
+.arama-kutu{position:relative}
+
+#arama{padding-right:2.6rem}
+
+#temizle{
+  position:absolute;
+  right:.5rem;top:50%;
+  transform:translateY(-50%);
+  background:none;border:0;
+  color:var(--acikgri);
+  font-size:1.1rem;
+  line-height:1;
+  padding:.35rem .5rem;
+  display:none;
+}
+#temizle:hover{color:var(--kirmizi)}
+
+.secenekler{margin-top:.8rem}
+
+/* ---------- Hata kayıtları ---------- */
+.bolum{margin-top:2.6rem}
+.bolum.gizli,.hata.gizli{display:none}
+
+.hata{
+  padding:1.2rem 0 1.3rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  border-left:2px solid transparent;
+  transition:border-left-color .18s ease;
+}
+
+.hata:hover{border-left-color:var(--kirmizi)}
+
+.hata-mesaj{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86rem;
+  color:var(--kirmizi);
+  word-break:break-word;
+  line-height:1.45;
+}
+
+.hata-ne{color:var(--beyaz);font-size:.95rem;margin-top:.55rem}
+.hata-ne strong{font-weight:500}
+
+.cozum{list-style:none;margin-top:.75rem;display:flex;flex-direction:column;gap:.35rem}
+
+.cozum li{
+  position:relative;
+  padding-left:1.15rem;
+  color:var(--acikgri);
+  font-size:.89rem;
+}
+
+.cozum li::before{
+  content:"";
+  position:absolute;
+  left:0;top:.68em;
+  width:5px;height:1px;
+  background:var(--kirmizi);
+}
+
+.cozum li strong{color:var(--beyaz);font-weight:500}
+
+#bos{display:none;color:var(--acikgri);padding:2.5rem 0;font-size:.95rem}
+</style>
+</head>
+
+<body>
+<main class="sayfa">
+
+  <a class="geri" href="/">← lyda.info</a>
+
+  <h1>Hata Sözlüğü</h1>
+  <p class="giris">ComfyUI'ın verdiği hatalar uzun ve İngilizce, ama çoğu birkaç tanıdık sebepten çıkıyor. Aldığın mesajın bir parçasını ara.</p>
+
+  <div class="araclar-ust">
+    <div class="arama-kutu">
+      <input id="arama" type="search" placeholder="Hata mesajından bir parça — out of memory, mat1…" autocomplete="off" aria-label="Hata ara">
+      <button id="temizle" type="button" aria-label="Aramayı temizle">×</button>
+    </div>
+    <div class="secenekler" id="etiketler" role="group" aria-label="Türe göre süz">
+      <button class="secenek" type="button" data-tur="hepsi" aria-pressed="true">Hepsi</button>
+      <button class="secenek" type="button" data-tur="bellek" aria-pressed="false">Bellek</button>
+      <button class="secenek" type="button" data-tur="uyumsuzluk" aria-pressed="false">Uyumsuzluk</button>
+      <button class="secenek" type="button" data-tur="eksik" aria-pressed="false">Eksik dosya ve düğüm</button>
+      <button class="secenek" type="button" data-tur="kurulum" aria-pressed="false">Kurulum</button>
+      <button class="secenek" type="button" data-tur="cikti" aria-pressed="false">Çıktı</button>
+    </div>
+  </div>
+
+  <p id="bos">Bu mesaja uyan bir kayıt yok. Hatanın tamamını <a href="mailto:lyda@lyda.info">bana gönder</a>, ekleyeyim.</p>
+
+  <!-- ============ BELLEK ============ -->
+  <section class="bolum" data-tur="bellek">
+    <h2 class="bolum-baslik">Bellek ve VRAM</h2>
+
+    <article class="hata">
+      <p class="hata-mesaj">torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate …</p>
+      <p class="hata-ne">Ekran kartının belleği yetmedi. <strong>En sık görülen hata budur</strong> ve neredeyse her zaman istenen işin karta sığmamasından kaynaklanır.</p>
+      <ul class="cozum">
+        <li>Çözünürlüğü düşür. Bellek ihtiyacı piksel sayısıyla birlikte artar; kenarları yarıya indirmek ihtiyacı dörtte bire düşürür.</li>
+        <li><strong>batch_size</strong> değerini 1 yap. Birden fazla görsel istiyorsan batch count kullan, o sırayla çalışır ve ek bellek istemez.</li>
+        <li>ComfyUI'ı <code>--lowvram</code> veya <code>--novram</code> bayrağıyla başlat.</li>
+        <li>Modelin <strong>fp8</strong> veya <strong>GGUF</strong> halini indir. Aynı model, çok daha az bellek.</li>
+        <li>VAE çözme aşamasında patlıyorsa <strong>Tiled VAE Decode</strong> düğümüne geç.</li>
+        <li>Hata birkaç başarılı üretimden sonra geldiyse bellek parçalanmıştır — ComfyUI'ı yeniden başlat.</li>
+        <li>Tarayıcıdaki ağır sekmeleri ve oyun istemcilerini kapat, onlar da VRAM tutar.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!</p>
+      <p class="hata-ne">İşlemin bir kısmı ekran kartında, bir kısmı işlemcide çalışıyor. Model parçaları farklı yerlere yüklenmiş.</p>
+      <ul class="cozum">
+        <li>ComfyUI'ı tamamen kapatıp yeniden başlat. Çoğu durumda bu yeterli.</li>
+        <li>Bellek bayraklarını karıştırma — <code>--lowvram</code> ve <code>--gpu-only</code> aynı anda kullanılmaz.</li>
+        <li>Son kurduğun custom node'u devre dışı bırakıp dene. Eski node'lar yeni ComfyUI sürümlerinde bu hatayı verebiliyor.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Allocation on device 0 would exceed allowed memory / CUDA error: out of memory</p>
+      <p class="hata-ne">Yukarıdakinin başka bir ifadesi. Bellek ayırma isteği reddedildi.</p>
+      <ul class="cozum">
+        <li>Üstteki <em>CUDA out of memory</em> maddesindeki adımların aynısı geçerli.</li>
+        <li>Sürücün çok eskiyse de görülebilir; ekran kartı sürücüsünü güncelle.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ============ UYUMSUZLUK ============ -->
+  <section class="bolum" data-tur="uyumsuzluk">
+    <h2 class="bolum-baslik">Model uyumsuzluğu</h2>
+
+    <article class="hata">
+      <p class="hata-mesaj">mat1 and mat2 shapes cannot be multiplied (… x … and … x …)</p>
+      <p class="hata-ne">Farklı mimarilerden parçaları birbirine bağladın. <strong>En yaygın sebebi SD 1.5 için eğitilmiş bir LoRA'yı SDXL modeline takmak</strong>, ya da tersi.</p>
+      <ul class="cozum">
+        <li>LoRA, ControlNet ve IPAdapter dosyalarının model ailesini kontrol et. SD 1.5 parçası yalnızca SD 1.5 modeliyle çalışır.</li>
+        <li>Pony ve Illustrious SDXL tabanlıdır, SDXL parçalarını kabul eder.</li>
+        <li>Flux için Flux'a özel LoRA ve ControlNet gerekir, SDXL olanlar çalışmaz.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">The size of tensor a (64) must match the size of tensor b (96) at non-singleton dimension 3</p>
+      <p class="hata-ne">İki görselin veya latentin ölçüleri tutmuyor. Genelde ControlNet görseli ya da maske, üretim boyutundan farklı.</p>
+      <ul class="cozum">
+        <li>ControlNet'e verdiğin görseli üretim boyutuna <strong>Image Resize</strong> ile eşitle.</li>
+        <li>Inpainting yapıyorsan maskenin kaynak görselle aynı ölçüde olduğundan emin ol.</li>
+        <li>Latent boyutunu değiştirdiysen akıştaki diğer görsel girişlerini de güncelle.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Given groups=1, weight of size […], expected input […] to have N channels</p>
+      <p class="hata-ne">Bir düğüme beklediğinden başka türde bir model bağlanmış. Örneğin SD 1.5 VAE'si SDXL akışına.</p>
+      <ul class="cozum">
+        <li>VAE'nin model ailesiyle eşleştiğini kontrol et.</li>
+        <li>Inpainting modeli yerine normal model (ya da tersi) bağlamadığından emin ol — kanal sayıları farklıdır.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">ERROR: Could not detect model type / Unable to determine model type</p>
+      <p class="hata-ne">ComfyUI dosyanın hangi tür model olduğunu anlayamadı. Genelde dosya yanlış klasörde ya da indirme yarım kalmış.</p>
+      <ul class="cozum">
+        <li>Tek başına difüzyon modelini <code>models/unet</code> klasörüne koy, <code>checkpoints</code> içine değil. Checkpoint klasörü üç parçayı birden taşıyan dosyalar içindir.</li>
+        <li>Dosya boyutunu sitedeki boyutla karşılaştır. Eksikse indirme yarıda kalmıştır, yeniden indir.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ============ EKSİK ============ -->
+  <section class="bolum" data-tur="eksik">
+    <h2 class="bolum-baslik">Eksik dosya ve düğüm</h2>
+
+    <article class="hata">
+      <p class="hata-mesaj">When loading the graph, the following node types were not found</p>
+      <p class="hata-ne">Workflow'da kullanılan düğümler sende kurulu değil. Tuvalde kırmızı kutular olarak görünürler.</p>
+      <ul class="cozum">
+        <li>ComfyUI Manager → <strong>Install Missing Custom Nodes</strong>. Eksikleri bulup kurar.</li>
+        <li>Kurulum bittikten sonra ComfyUI'ı <strong>yeniden başlat</strong>, sayfayı yenilemek yetmez.</li>
+        <li>Manager bulamıyorsa düğümün adını arat, geliştiricinin deposunu <code>custom_nodes</code> klasörüne klonla.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Prompt outputs failed validation: Value not in list: ckpt_name: '…' not in []</p>
+      <p class="hata-ne">Seçili model dosyası bulunamıyor. Köşeli parantez boşsa o klasörde hiç dosya yok demektir.</p>
+      <ul class="cozum">
+        <li>Dosyanın doğru klasörde olduğundan emin ol: checkpoint'ler <code>models/checkpoints</code>, LoRA'lar <code>models/loras</code>, VAE'ler <code>models/vae</code>.</li>
+        <li>Tarayıcıda <strong>R</strong> tuşuna bas ya da ComfyUI'ı yeniden başlat; model listesi açılışta okunur.</li>
+        <li>Başkasının workflow'unu açtıysan o dosya sende olmayabilir — kendi modelini seç.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Required input is missing: … / Prompt has no outputs</p>
+      <p class="hata-ne">Bir düğümün zorunlu girişi bağlanmamış, ya da akışın sonunda kaydeden bir düğüm yok.</p>
+      <ul class="cozum">
+        <li>Hata hangi düğümü işaret ediyorsa onun sol tarafındaki boş uçları ara.</li>
+        <li>Akışın sonunda <strong>Preview Image</strong> veya <strong>Save Image</strong> olduğundan emin ol. Çıktısı olmayan akış çalışmaz.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">ModuleNotFoundError: No module named '…'</p>
+      <p class="hata-ne">Kurduğun bir custom node'un ihtiyaç duyduğu Python paketi eksik.</p>
+      <ul class="cozum">
+        <li>Manager → ilgili düğüm → <strong>Try fix</strong>.</li>
+        <li>Olmazsa o düğümün klasöründeki <code>requirements.txt</code> dosyasını elle kur. Portable sürümde ComfyUI'ın kendi Python'unu kullanman gerekir, sistemdekini değil.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">'NoneType' object has no attribute '…'</p>
+      <p class="hata-ne">Bir düğüm beklediği veriyi alamadı. Öncesindeki düğüm boş döndürmüş ya da bağlantı kopuk.</p>
+      <ul class="cozum">
+        <li>Hatanın işaret ettiği düğümden geriye doğru bağlantıları takip et.</li>
+        <li>Bypass veya mute ettiğin bir düğüm akışı kesiyor olabilir.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Error while deserializing header: HeaderTooLarge / unexpected EOF</p>
+      <p class="hata-ne">Model dosyası bozuk. Neredeyse her zaman indirme yarıda kalmıştır.</p>
+      <ul class="cozum">
+        <li>Dosyayı sil ve yeniden indir. Tarayıcı yerine indirme yöneticisi kullanmak büyük dosyalarda daha güvenli.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ============ KURULUM ============ -->
+  <section class="bolum" data-tur="kurulum">
+    <h2 class="bolum-baslik">Kurulum ve başlatma</h2>
+
+    <article class="hata">
+      <p class="hata-mesaj">AssertionError: Torch not compiled with CUDA enabled</p>
+      <p class="hata-ne">PyTorch'un işlemci sürümü kurulu. Ekran kartın kullanılamıyor.</p>
+      <ul class="cozum">
+        <li>En kolay yol: resmî <strong>portable</strong> sürümü indir, doğru PyTorch'la birlikte gelir.</li>
+        <li>Elle kurduysan CUDA'lı PyTorch sürümünü kur, kart modeline uygun olanı seç.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">OSError: [Errno 98] Address already in use / port 8188</p>
+      <p class="hata-ne">ComfyUI zaten çalışıyor. İkinci kopya aynı adresi kullanamıyor.</p>
+      <ul class="cozum">
+        <li>Açık olan ComfyUI penceresini bul ve kapat.</li>
+        <li>Göremiyorsan görev yöneticisinden python işlemini sonlandır.</li>
+        <li>Bilerek ikinci kopya çalıştırıyorsan <code>--port 8189</code> ekle.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Üretim çok yavaş — bir görsel dakikalar sürüyor</p>
+      <p class="hata-ne">Hata mesajı yok ama işlem ekran kartı yerine işlemcide çalışıyor olabilir.</p>
+      <ul class="cozum">
+        <li>Başlangıç günlüğüne bak. <code>Device: cuda</code> yazmıyorsa kart kullanılmıyor demektir.</li>
+        <li>Başlatma betiğinde <code>--cpu</code> bayrağı var mı kontrol et.</li>
+        <li>Kart görünüyor ama yavaşsa modelin her üretimde diske inip çıkmadığına bak — yetersiz VRAM'de ComfyUI model takası yapar ve bu çok yavaşlatır.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ============ ÇIKTI ============ -->
+  <section class="bolum" data-tur="cikti">
+    <h2 class="bolum-baslik">Çıktı sorunları</h2>
+
+    <article class="hata">
+      <p class="hata-mesaj">Çıktı tamamen siyah geliyor</p>
+      <p class="hata-ne">Hata vermiyor ama görsel boş. Genelde VAE aşamasında sayısal taşma oluyor — özellikle bazı SDXL VAE'lerinde fp16 ile.</p>
+      <ul class="cozum">
+        <li>ComfyUI'ı <code>--no-half-vae</code> bayrağıyla başlat.</li>
+        <li>Ya da fp16 için düzeltilmiş SDXL VAE dosyasını indirip kullan.</li>
+        <li>Flux'ta görülüyorsa model dosyasının <strong>bf16</strong> halini dene; fp16 Flux'ta taşmaya daha yatkın.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Görsel solgun, bulanık veya renkleri kaymış</p>
+      <p class="hata-ne">Yanlış VAE kullanılıyor ya da hiç VAE yüklenmemiş.</p>
+      <ul class="cozum">
+        <li>VAE'nin model ailesiyle eşleştiğinden emin ol.</li>
+        <li>Checkpoint'in içindeki VAE'yi kullanmak istiyorsan ayrı VAE yükleyen düğümü bypass et.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Aynı sahnede iki kafa, kopyalanmış gövdeler</p>
+      <p class="hata-ne">Hata değil, boyut sorunu. Model eğitildiği alanın çok üstünde bir çözünürlük istendiğinde öğrendiği kalıbı tekrarlıyor.</p>
+      <ul class="cozum">
+        <li>Modelin kendi ölçüsünde üret, sonra büyüt. <a href="/araclar/cozunurluk/">Çözünürlük seçici</a> doğru ölçüyü verir.</li>
+        <li>Büyütmeyi düşük denoise ile ikinci bir üretim olarak yap.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">Negatif prompt hiçbir şey yapmıyor</p>
+      <p class="hata-ne">Hata değil. Turbo, Lightning, Hyper ve Flux schnell gibi damıtılmış modellerde <strong>CFG 1</strong> kullanılır, CFG 1'de negatif prompt devre dışı kalır.</p>
+      <ul class="cozum">
+        <li>Negatif prompt kullanmak istiyorsan damıtılmamış bir model seç ve CFG'yi 1'in üstüne çıkar.</li>
+        <li>Flux dev'de klasik CFG yerine guidance değeri vardır, negatif prompt yine etkisizdir.</li>
+      </ul>
+    </article>
+
+    <article class="hata">
+      <p class="hata-mesaj">CUDA error: device-side assert triggered</p>
+      <p class="hata-ne">Modele geçersiz bir değer gitti. Genelde uyumsuz bir embedding ya da bozuk bir token kaynaklı.</p>
+      <ul class="cozum">
+        <li>Prompt'tan embedding çağrılarını tek tek çıkararak dene.</li>
+        <li>ComfyUI'ı yeniden başlat; bu hatadan sonra oturum genelde kullanılamaz hale gelir.</li>
+      </ul>
+    </article>
+  </section>
+
+  <footer>
+    <div class="komsu">
+      <a href="/sozluk/">Sözlük</a>
+      <a href="/araclar/cozunurluk/">Çözünürlük seçici</a>
+      <a href="/araclar/model-adi/">Model adı çözücü</a>
+      <a href="/rehber/">ComfyUI Rehberi</a>
+    </div>
+    Listede olmayan bir hata aldıysan mesajın tamamını <a href="mailto:lyda@lyda.info">gönder</a>, ekleyeyim. · <a href="/">lyda.info</a>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  var arama = document.getElementById("arama");
+  var temizle = document.getElementById("temizle");
+  var bos = document.getElementById("bos");
+  var bolumler = Array.prototype.slice.call(document.querySelectorAll(".bolum"));
+  var etiketler = Array.prototype.slice.call(document.querySelectorAll(".secenek"));
+  var secili = "hepsi";
+
+  var kayitlar = [];
+  bolumler.forEach(function (bolum) {
+    Array.prototype.forEach.call(bolum.querySelectorAll(".hata"), function (el) {
+      kayitlar.push({ el: el, bolum: bolum, metin: el.textContent.toLocaleLowerCase("tr") });
+    });
+  });
+
+  function suz() {
+    var sorgu = arama.value.trim().toLocaleLowerCase("tr");
+    temizle.style.display = sorgu ? "block" : "none";
+    var bulunan = 0;
+
+    kayitlar.forEach(function (k) {
+      var turUyar = secili === "hepsi" || k.bolum.dataset.tur === secili;
+      var metinUyar = !sorgu || k.metin.indexOf(sorgu) !== -1;
+      var goster = turUyar && metinUyar;
+      k.el.classList.toggle("gizli", !goster);
+      if (goster) bulunan++;
+    });
+
+    bolumler.forEach(function (b) {
+      b.classList.toggle("gizli", b.querySelectorAll(".hata:not(.gizli)").length === 0);
+    });
+
+    bos.style.display = bulunan ? "none" : "block";
+  }
+
+  arama.addEventListener("input", suz);
+
+  temizle.addEventListener("click", function () {
+    arama.value = "";
+    arama.focus();
+    suz();
+  });
+
+  etiketler.forEach(function (etiket) {
+    etiket.addEventListener("click", function () {
+      secili = etiket.dataset.tur;
+      etiketler.forEach(function (e) {
+        e.setAttribute("aria-pressed", e === etiket ? "true" : "false");
+      });
+      suz();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
