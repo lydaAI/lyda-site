@@ -66,20 +66,6 @@ body{
   padding:clamp(2.5rem,8vw,5rem) 1.5rem 3rem;
 }
 
-/* ---------- İki sütunlu düzen ---------- */
-.duzen{
-  position:relative;
-  z-index:2;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  gap:clamp(2.5rem,6vw,5rem);
-  width:100%;
-}
-
-@media (max-width:860px){
-  .duzen{flex-direction:column;align-items:center;gap:3.5rem}
-}
 
 /* ---------- Akan görsel duvarı ---------- */
 .fon{
@@ -142,6 +128,48 @@ body{
 .kakemono{width:100%;max-width:430px;position:relative;z-index:2}
 
 .tepe{display:flex;flex-direction:column;align-items:flex-start;gap:.9rem}
+
+.tepe-ust{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:1rem;
+  width:100%;
+}
+
+/* ---------- Sekmeler ---------- */
+.sekmeler{
+  display:flex;
+  gap:.3rem;
+  padding:.22rem;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:100px;
+  opacity:0;
+  animation:satirIn .5s ease-out .3s forwards;
+}
+
+.sekme{
+  background:none;
+  border:0;
+  border-radius:100px;
+  color:var(--acikgri);
+  font:inherit;
+  font-size:.82rem;
+  padding:.32rem .85rem;
+  white-space:nowrap;
+  transition:color .18s ease,background .18s ease;
+}
+
+.sekme:hover{color:var(--beyaz)}
+
+.sekme[aria-selected="true"]{
+  background:var(--kirmizi);
+  color:var(--siyah);
+  font-weight:500;
+}
+
+.sekme:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
 
 .tanim{
   color:var(--acikgri);
@@ -209,6 +237,99 @@ h1{
 
 .baglantilar>li:hover::before,
 .baglantilar>li:focus-within::before{background:var(--kirmizi)}
+
+/* ---------- Rehber satırları ---------- */
+.bolumler{
+  list-style:none;
+  margin-top:2.75rem;
+  padding-left:1.5rem;
+  position:relative;
+  counter-reset:bolum;
+}
+
+.bolumler::before{
+  content:"";
+  position:absolute;
+  left:4px;top:.15rem;bottom:1.9rem;
+  width:1px;
+  background:linear-gradient(var(--kirmizi),rgba(232,51,44,.18));
+  transform:scaleY(0);
+  transform-origin:top;
+  animation:kabloIn 1.15s cubic-bezier(.25,.8,.3,1) .1s forwards;
+}
+
+.bolumler li{
+  position:relative;
+  counter-increment:bolum;
+  opacity:0;
+  transform:translateY(6px);
+  animation:satirIn .5s ease-out forwards;
+}
+
+.bolumler li:nth-child(1){animation-delay:.26s}
+.bolumler li:nth-child(2){animation-delay:.40s}
+.bolumler li:nth-child(3){animation-delay:.54s}
+.bolumler li:nth-child(4){animation-delay:.68s}
+.bolumler li:nth-child(5){animation-delay:.82s}
+.bolumler li:nth-child(6){animation-delay:.96s}
+.bolumler li:nth-child(7){animation-delay:1.10s}
+.bolumler li:nth-child(8){animation-delay:1.24s}
+
+.bolumler li::before{
+  content:"";
+  position:absolute;
+  left:-1.5rem;top:1.55rem;
+  width:9px;height:9px;
+  border-radius:50%;
+  background:var(--siyah);
+  border:1px solid var(--kirmizi);
+  transition:background .18s ease;
+}
+
+.bolumler li:hover::before,
+.bolumler li:focus-within::before{background:var(--kirmizi)}
+
+.bolum-satir{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.05rem 0;
+  border-bottom:1px solid rgba(255,255,255,.13);
+  color:var(--beyaz);
+  text-decoration:none;
+}
+
+.bolumler li:first-child .bolum-satir{border-top:1px solid rgba(255,255,255,.13)}
+
+.bolum-ad{
+  font-weight:500;
+  display:flex;
+  align-items:baseline;
+  gap:.7rem;
+  transition:color .18s ease;
+}
+
+.bolum-ad::before{
+  content:counter(bolum,decimal-leading-zero);
+  font-size:.78rem;
+  color:var(--kirmizi);
+  width:1.15em;
+  flex-shrink:0;
+  transition:color .18s ease;
+}
+
+a.bolum-satir:hover .bolum-ad,
+a.bolum-satir:focus-visible .bolum-ad{color:var(--kirmizi)}
+
+a.bolum-satir:focus-visible{outline:2px solid var(--kirmizi);outline-offset:4px;border-radius:2px}
+
+/* Henüz yayında olmayan bölümler */
+.bolum-satir.kilitli{cursor:default}
+.bolum-satir.kilitli .bolum-ad{color:var(--acikgri);font-weight:400}
+.bolum-satir.kilitli .bolum-ad::before{color:rgba(232,51,44,.4)}
+.bolumler li:has(.kilitli)::before{border-color:rgba(232,51,44,.4)}
+.bolumler li:has(.kilitli):hover::before{background:var(--siyah)}
 
 /* ---------- Link satırı ---------- */
 a.satir{
@@ -372,92 +493,6 @@ footer{
 
 .sosyal a:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
 
-/* ---------- Rehber sütunu ---------- */
-.rehber{
-  width:100%;
-  max-width:360px;
-  flex-shrink:0;
-  opacity:0;
-  animation:satirIn .6s ease-out .55s forwards;
-}
-
-@media (max-width:860px){
-  .rehber{max-width:430px}
-}
-
-.rehber h2{
-  font-family:"Fraunces",Georgia,serif;
-  font-weight:600;
-  font-size:1.6rem;
-  line-height:1.1;
-  letter-spacing:-.01em;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-}
-
-.rehber-giris{
-  color:var(--acikgri);
-  font-size:.88rem;
-  margin-top:.5rem;
-  max-width:36ch;
-}
-
-.bolumler{
-  list-style:none;
-  margin-top:1.6rem;
-  counter-reset:bolum;
-}
-
-.bolumler li{counter-increment:bolum}
-
-.bolumler a,
-.bolumler .kilitli{
-  display:grid;
-  grid-template-columns:2rem 1fr;
-  gap:.1rem .7rem;
-  padding:.7rem 0;
-  border-bottom:1px solid rgba(255,255,255,.1);
-  text-decoration:none;
-  color:var(--beyaz);
-}
-
-.bolumler li:first-child a,
-.bolumler li:first-child .kilitli{border-top:1px solid rgba(255,255,255,.1)}
-
-/* Sıra numarası */
-.bolumler a::before,
-.bolumler .kilitli::before{
-  content:counter(bolum,decimal-leading-zero);
-  grid-row:span 2;
-  font-size:.78rem;
-  color:var(--kirmizi);
-  padding-top:.18rem;
-  transition:color .18s ease;
-}
-
-.bolumler .ad-bolum{font-size:.93rem;font-weight:500;transition:color .18s ease}
-.bolumler .alt-bolum{font-size:.8rem;color:var(--acikgri)}
-
-.bolumler a:hover .ad-bolum,
-.bolumler a:focus-visible .ad-bolum{color:var(--kirmizi)}
-
-.bolumler a:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px;border-radius:2px}
-
-/* Henüz yayında olmayan bölümler — tıklanamaz */
-.bolumler .kilitli{cursor:default}
-.bolumler .kilitli::before{color:rgba(232,51,44,.4)}
-.bolumler .kilitli .ad-bolum{color:var(--acikgri);font-weight:400}
-.bolumler .kilitli .alt-bolum{color:#5E5E5E}
-
-.rozet{
-  font-size:.7rem;
-  color:#5E5E5E;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:100px;
-  padding:.05rem .5rem;
-  margin-left:.45rem;
-  white-space:nowrap;
-}
-
 @keyframes kabloIn{to{transform:scaleY(1)}}
 @keyframes satirIn{to{opacity:1;transform:translateY(0)}}
 @keyframes akisYukari{from{transform:translateY(0)}to{transform:translateY(-50%)}}
@@ -465,8 +500,8 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  h1,.tanim,footer,.baglantilar li,.sosyal,.rehber{opacity:1;transform:none}
-  .baglantilar::before{transform:scaleY(1)}
+  h1,.tanim,footer,.baglantilar li,.bolumler li,.sosyal,.sekmeler{opacity:1;transform:none}
+  .baglantilar::before,.bolumler::before{transform:scaleY(1)}
 }
 </style>
 </head>
@@ -510,18 +545,25 @@ footer{
 </div>
 <div class="perde"></div>
 
-<div class="duzen">
-
 <main class="kakemono">
 
   <header class="tepe">
-    <h1>Lyda AI</h1>
+    <div class="tepe-ust">
+      <h1>Lyda AI</h1>
+      <div class="sekmeler" role="tablist" aria-label="Görünüm">
+        <button class="sekme" id="sekme-baglantilar" type="button" role="tab"
+                aria-selected="true" aria-controls="panel-baglantilar">Bağlantılar</button>
+        <button class="sekme" id="sekme-rehber" type="button" role="tab"
+                aria-selected="false" aria-controls="panel-rehber" tabindex="-1">Rehber</button>
+      </div>
+    </div>
     <p class="tanim">Türkçe yapay zeka rehberleri — ComfyUI ve ötesi.</p>
   </header>
 
   <!-- ================================================
-       LİNKLER — sadece burayı düzenle.
+       PANEL 1 — BAĞLANTILAR
        ================================================ -->
+  <div id="panel-baglantilar" role="tabpanel" aria-labelledby="sekme-baglantilar">
   <ul class="baglantilar">
 
     <li>
@@ -583,6 +625,60 @@ footer{
     </li>
 
   </ul>
+  </div>
+
+  <!-- ================================================
+       PANEL 2 — REHBER
+       Bölüm yayına girdiğinde <span class="bolum-satir kilitli">
+       etiketini <a class="bolum-satir" href="..."> ile değiştir.
+       ================================================ -->
+  <div id="panel-rehber" role="tabpanel" aria-labelledby="sekme-rehber" hidden>
+  <ol class="bolumler">
+
+    <li>
+      <a class="bolum-satir" href="/sozluk/">
+        <span class="bolum-ad">Sözlük</span>
+        <span class="not">Terimler</span>
+      </a>
+    </li>
+
+    <li>
+      <span class="bolum-satir kilitli">
+        <span class="bolum-ad">Kurulum</span>
+        <span class="not">yakında</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="bolum-satir kilitli">
+        <span class="bolum-ad">Arayüz ve node mantığı</span>
+        <span class="not">yakında</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="bolum-satir kilitli">
+        <span class="bolum-ad">İlk görselin</span>
+        <span class="not">yakında</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="bolum-satir kilitli">
+        <span class="bolum-ad">Workflow'u sıfırdan kurmak</span>
+        <span class="not">yakında</span>
+      </span>
+    </li>
+
+    <li>
+      <span class="bolum-satir kilitli">
+        <span class="bolum-ad">KSampler ayarları</span>
+        <span class="not">yakında</span>
+      </span>
+    </li>
+
+  </ol>
+  </div>
 
   <footer>
     <span>lyda.info</span>
@@ -597,67 +693,47 @@ footer{
 
 </main>
 
-<!-- ================================================
-     REHBER SÜTUNU
-     Bölüm yayına girince <span class="kilitli"> etiketini
-     <a href="..."> ile değiştir, rozeti sil.
-     ================================================ -->
-<aside class="rehber" aria-labelledby="rehber-baslik">
-
-  <h2 id="rehber-baslik">ComfyUI Rehberi</h2>
-  <p class="rehber-giris">Sıfırdan başlayıp kendi workflow'unu kurana kadar. Sırayla ilerlemek için tasarlandı.</p>
-
-  <ol class="bolumler">
-
-    <li>
-      <a href="/sozluk/">
-        <span class="ad-bolum">Sözlük</span>
-        <span class="alt-bolum">Takıldığında bakacağın terimler</span>
-      </a>
-    </li>
-
-    <li>
-      <span class="kilitli">
-        <span class="ad-bolum">Kurulum<span class="rozet">yakında</span></span>
-        <span class="alt-bolum">ComfyUI'ı bilgisayarına kurmak</span>
-      </span>
-    </li>
-
-    <li>
-      <span class="kilitli">
-        <span class="ad-bolum">Arayüz ve node mantığı<span class="rozet">yakında</span></span>
-        <span class="alt-bolum">Düğümler neden böyle bağlanıyor</span>
-      </span>
-    </li>
-
-    <li>
-      <span class="kilitli">
-        <span class="ad-bolum">İlk görselin<span class="rozet">yakında</span></span>
-        <span class="alt-bolum">Hazır workflow ile üretime başlamak</span>
-      </span>
-    </li>
-
-    <li>
-      <span class="kilitli">
-        <span class="ad-bolum">Workflow'u sıfırdan kurmak<span class="rozet">yakında</span></span>
-        <span class="alt-bolum">Her düğümü kendin bağlayarak</span>
-      </span>
-    </li>
-
-    <li>
-      <span class="kilitli">
-        <span class="ad-bolum">KSampler ayarları<span class="rozet">yakında</span></span>
-        <span class="alt-bolum">Steps, CFG, sampler, seed, denoise</span>
-      </span>
-    </li>
-
-  </ol>
-
-</aside>
-
-</div>
 
 <script>
+/* ---------- Sekme geçişi ---------- */
+(function () {
+  var sekmeler = Array.prototype.slice.call(document.querySelectorAll(".sekme"));
+
+  function gec(secilen) {
+    sekmeler.forEach(function (s) {
+      var aktif = s === secilen;
+      s.setAttribute("aria-selected", aktif ? "true" : "false");
+      s.tabIndex = aktif ? 0 : -1;
+      var panel = document.getElementById(s.getAttribute("aria-controls"));
+      panel.hidden = !aktif;
+      if (aktif) {
+        // Kablo ve satır animasyonunu baştan oynat
+        var liste = panel.firstElementChild;
+        liste.style.animation = "none";
+        void liste.offsetWidth;
+        liste.style.animation = "";
+        Array.prototype.forEach.call(panel.querySelectorAll("li"), function (li) {
+          li.style.animation = "none";
+          void li.offsetWidth;
+          li.style.animation = "";
+        });
+      }
+    });
+  }
+
+  sekmeler.forEach(function (sekme, i) {
+    sekme.addEventListener("click", function () { gec(sekme); });
+    sekme.addEventListener("keydown", function (e) {
+      var yon = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!yon) return;
+      e.preventDefault();
+      var hedef = sekmeler[(i + yon + sekmeler.length) % sekmeler.length];
+      hedef.focus();
+      gec(hedef);
+    });
+  });
+})();
+
 document.querySelectorAll("button.ac").forEach(function (dugme) {
   dugme.addEventListener("click", function () {
     var satir = dugme.closest("li");
