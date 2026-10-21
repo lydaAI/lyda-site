@@ -172,9 +172,18 @@ Playwright ile ekran görüntüsü alırken iki tuzak var:
 Mesajlar Türkçe, emir kipi, tek satır: *"İki alan arasına ayraç ekle"*,
 *"Hata sözlüğü aracı ekle"*. Gövde gerekiyorsa boş satırdan sonra.
 
-Commit'in "Verified" görünmesi için yazar `Claude <noreply@anthropic.com>`
-olmalı. Yanlış yazarla commit attıysan:
-`git commit --amend --no-edit --reset-author`.
+Commit'in yazarı `Claude <noreply@anthropic.com>` olmalı. Nereden commit
+attığına göre "Verified" farklı sağlanıyor:
+
+- **Bulut / web oturumu:** commit'i ortam imzalıyor; yazar Claude yeterli.
+- **Emir'in Windows bilgisayarı (yerel):** depo SSH anahtarıyla imzalıyor
+  (`~/.ssh/lyda_imza`, `commit.gpgsign` yerel ayarda açık). GitHub imzayı
+  yalnız **committer** e-postası hesapta doğrulanmışsa kabul eder, o yüzden
+  committer Emir'in kimliği (`Lyda <lyda@lyda.info>`, git ayarında zaten var)
+  kalmalı, yazar Claude verilmeli:
+  `git commit --author="Claude <noreply@anthropic.com>" -m "…"`.
+  Committer'ı Claude yaparsan GitHub commit'i "Unverified" gösterir.
+  Bu makinede `python3` Store kısayoluna gidiyor; `python` kullan.
 
 ## Bilinen eksikler ve yer tutucular
 
