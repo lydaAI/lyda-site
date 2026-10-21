@@ -519,13 +519,13 @@ footer{
   transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease;
 }
 
-.dugum:hover,.dugum:focus-visible{
+a.dugum:hover,a.dugum:focus-visible{
   border-color:var(--kirmizi);
   transform:translateY(-2px);
   box-shadow:0 6px 22px rgba(0,0,0,.45);
 }
 
-.dugum:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
+a.dugum:focus-visible{outline:2px solid var(--kirmizi);outline-offset:3px}
 
 /* Başlık çubuğu — ComfyUI düğümlerindeki gibi */
 .dugum-ust{
@@ -559,8 +559,8 @@ footer{
 .dugum-etiket{
   display:inline-block;
   margin-left:auto;
-  font-size:.68rem;
-  color:#5E5E5E;
+  font-size:.7rem;
+  color:var(--acikgri);
   border:1px solid rgba(255,255,255,.14);
   border-radius:100px;
   padding:.05rem .45rem;
@@ -576,7 +576,6 @@ footer{
 
 /* Henüz yayında olmayanlar */
 .dugum.kilitli .dugum-ad{color:var(--acikgri);font-weight:400}
-.dugum.kilitli .dugum-govde{color:#5E5E5E}
 .dugum.kilitli .dugum-no{color:rgba(232,51,44,.45)}
 
 @keyframes kabloIn{to{transform:scaleY(1)}}
@@ -704,9 +703,10 @@ footer{
 
 <!-- =================================================
      REHBER ALANI
-     Bölüm yayına girince: "kilitli" sınıfını sil,
-     href'i bölümün adresiyle değiştir, etiketi güncelle.
-     Kablolar sayfa sonundaki betikle çiziliyor.
+     Kilitli bölümler bilerek bağlantı değil (<div>): tıklanınca
+     boş bir sayfaya gitmesin. Bölüm yayına girince <div class="dugum
+     kilitli"> → <a class="dugum hazir" href="bölümün adresi">, etiketi
+     "hazır" yap.
      ================================================= -->
 <section class="rehber-alani" aria-labelledby="alan-baslik">
 
@@ -720,106 +720,12 @@ footer{
 
   <div class="suzgec" role="group" aria-label="Kategoriye göre süz">
     <button class="suz" type="button" data-kategori="hepsi" aria-pressed="true">Hepsi</button>
+    <button class="suz" type="button" data-kategori="araclar" aria-pressed="false">Araçlar</button>
     <button class="suz" type="button" data-kategori="baslangic" aria-pressed="false">Başlangıç</button>
     <button class="suz" type="button" data-kategori="modeller" aria-pressed="false">Modeller</button>
     <button class="suz" type="button" data-kategori="workflow" aria-pressed="false">Workflow</button>
     <button class="suz" type="button" data-kategori="ayarlar" aria-pressed="false">Üretim ayarları</button>
-    <button class="suz" type="button" data-kategori="araclar" aria-pressed="false">Araçlar</button>
   </div>
-
-    <div class="kategori" data-kategori="baslangic">
-      <h3 class="kategori-ad">Başlangıç<span>Kurmak ve arayüzü tanımak</span></h3>
-      <ul class="dugumler">
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-download" aria-hidden="true"></i>
-              <span class="dugum-ad">Kurulum</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Kurmak, model klasörleri, ilk açılış.</span>
-          </a>
-        </li>
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-diagram-project" aria-hidden="true"></i>
-              <span class="dugum-ad">Arayüz ve node mantığı</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Düğümler neden böyle bağlanıyor.</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="kategori" data-kategori="modeller">
-      <h3 class="kategori-ad">Modeller<span>Hangi model, nereye, nasıl</span></h3>
-      <ul class="dugumler">
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-cube" aria-hidden="true"></i>
-              <span class="dugum-ad">Model seçimi ve kurulumu</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Checkpoint, VAE, text encoder nereye konur.</span>
-          </a>
-        </li>
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-layer-group" aria-hidden="true"></i>
-              <span class="dugum-ad">LoRA kullanmak</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Eklemek, güç ayarı, birden fazlasını birlikte.</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="kategori" data-kategori="workflow">
-      <h3 class="kategori-ad">Workflow<span>Kendi akışını kurmak ve yönetmek</span></h3>
-      <ul class="dugumler">
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-pen-ruler" aria-hidden="true"></i>
-              <span class="dugum-ad">Sıfırdan workflow</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Her düğümü kendin bağlayarak.</span>
-          </a>
-        </li>
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-floppy-disk" aria-hidden="true"></i>
-              <span class="dugum-ad">Kaydetmek ve paylaşmak</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">JSON, PNG'ye gömülü akış, eksik düğümler.</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="kategori" data-kategori="ayarlar">
-      <h3 class="kategori-ad">Üretim ayarları<span>Çıktıyı belirleyen değerler</span></h3>
-      <ul class="dugumler">
-        <li>
-          <a class="dugum kilitli" href="/rehber/">
-            <span class="dugum-ust">
-              <i class="dugum-no fa-solid fa-sliders" aria-hidden="true"></i>
-              <span class="dugum-ad">KSampler ayarları</span>
-              <span class="dugum-etiket">yakında</span>
-            </span>
-            <span class="dugum-govde">Steps, CFG, sampler, seed, denoise.</span>
-          </a>
-        </li>
-      </ul>
-    </div>
 
     <div class="kategori" data-kategori="araclar">
       <h3 class="kategori-ad">Araçlar<span>Hazır olanlar — her zaman açık kalabilir</span></h3>
@@ -866,6 +772,101 @@ footer{
         </li>
       </ul>
     </div>
+
+    <div class="kategori" data-kategori="baslangic">
+      <h3 class="kategori-ad">Başlangıç<span>Kurmak ve arayüzü tanımak</span></h3>
+      <ul class="dugumler">
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-download" aria-hidden="true"></i>
+              <span class="dugum-ad">Kurulum</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Kurmak, model klasörleri, ilk açılış.</span>
+          </div>
+        </li>
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-diagram-project" aria-hidden="true"></i>
+              <span class="dugum-ad">Arayüz ve node mantığı</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Düğümler neden böyle bağlanıyor.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kategori" data-kategori="modeller">
+      <h3 class="kategori-ad">Modeller<span>Hangi model, nereye, nasıl</span></h3>
+      <ul class="dugumler">
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-cube" aria-hidden="true"></i>
+              <span class="dugum-ad">Model seçimi ve kurulumu</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Checkpoint, VAE, text encoder nereye konur.</span>
+          </div>
+        </li>
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-layer-group" aria-hidden="true"></i>
+              <span class="dugum-ad">LoRA kullanmak</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Eklemek, güç ayarı, birden fazlasını birlikte.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kategori" data-kategori="workflow">
+      <h3 class="kategori-ad">Workflow<span>Kendi akışını kurmak ve yönetmek</span></h3>
+      <ul class="dugumler">
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-pen-ruler" aria-hidden="true"></i>
+              <span class="dugum-ad">Sıfırdan workflow</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Her düğümü kendin bağlayarak.</span>
+          </div>
+        </li>
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              <span class="dugum-ad">Kaydetmek ve paylaşmak</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">JSON, PNG'ye gömülü akış, eksik düğümler.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kategori" data-kategori="ayarlar">
+      <h3 class="kategori-ad">Üretim ayarları<span>Çıktıyı belirleyen değerler</span></h3>
+      <ul class="dugumler">
+        <li>
+          <div class="dugum kilitli">
+            <span class="dugum-ust">
+              <i class="dugum-no fa-solid fa-sliders" aria-hidden="true"></i>
+              <span class="dugum-ad">KSampler ayarları</span>
+              <span class="dugum-etiket">yakında</span>
+            </span>
+            <span class="dugum-govde">Steps, CFG, sampler, seed, denoise.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
 </section>
 
 <footer>
