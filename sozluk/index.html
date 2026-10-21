@@ -205,6 +205,12 @@ h1{
   font-size:.95rem;
 }
 
+#bos a{color:var(--beyaz);text-decoration-color:var(--kirmizi);text-underline-offset:3px}
+#bos a:hover{color:var(--kirmizi)}
+
+#durum{color:var(--acikgri);font-size:.85rem;margin-top:1.2rem}
+#durum:empty{display:none}
+
 .bolum.gizli,.terim.gizli{display:none}
 
 footer{
@@ -249,7 +255,10 @@ footer a:hover{color:var(--kirmizi)}
     </div>
   </div>
 
-  <p id="bos">Bu terim listede yok. Başka bir kelimeyle dene, ya da eklenmesini istiyorsan <a href="mailto:lyda@lyda.info">yaz</a>.</p>
+  <div aria-live="polite">
+    <p id="durum"></p>
+    <p id="bos">Bu terim listede yok. Başka bir kelimeyle dene, ya da eklenmesini istiyorsan <a href="mailto:lyda@lyda.info">yaz</a>.</p>
+  </div>
 
   <!-- ============ TEMEL ============ -->
   <section class="bolum" data-kategori="temel">
@@ -523,9 +532,16 @@ footer a:hover{color:var(--kirmizi)}
   var arama = document.getElementById("arama");
   var temizle = document.getElementById("temizle");
   var bos = document.getElementById("bos");
+  var durum = document.getElementById("durum");
   var bolumler = Array.prototype.slice.call(document.querySelectorAll(".bolum"));
   var etiketler = Array.prototype.slice.call(document.querySelectorAll(".etiket"));
   var secili = "hepsi";
+
+  // "tr" küçültme "İ"yi doğru çevirir ama İngilizce "CLIP"i "clıp" yapar;
+  // ı'yı i'ye katlayınca iki yazım da birbirini bulur
+  function sadelestir(s) {
+    return s.toLocaleLowerCase("tr").replace(/ı/g, "i");
+  }
 
   // Arama için her terimin metnini bir kez hazırla
   var terimler = [];
@@ -534,13 +550,13 @@ footer a:hover{color:var(--kirmizi)}
       terimler.push({
         el: el,
         bolum: bolum,
-        metin: el.textContent.toLocaleLowerCase("tr")
+        metin: sadelestir(el.textContent)
       });
     });
   });
 
   function suz() {
-    var sorgu = arama.value.trim().toLocaleLowerCase("tr");
+    var sorgu = sadelestir(arama.value.trim());
     temizle.style.display = sorgu ? "block" : "none";
 
     var bulunan = 0;
@@ -559,6 +575,7 @@ footer a:hover{color:var(--kirmizi)}
     });
 
     bos.style.display = bulunan ? "none" : "block";
+    durum.textContent = bulunan && (sorgu || secili !== "hepsi") ? bulunan + " terim" : "";
   }
 
   arama.addEventListener("input", suz);

@@ -92,6 +92,12 @@
 .cozum li strong{color:var(--beyaz);font-weight:500}
 
 #bos{display:none;color:var(--acikgri);padding:2.5rem 0;font-size:.95rem}
+
+#bos a,.cozum a{color:var(--beyaz);text-decoration-color:var(--kirmizi);text-underline-offset:3px}
+#bos a:hover,.cozum a:hover{color:var(--kirmizi)}
+
+#durum{color:var(--acikgri);font-size:.85rem;margin-top:1.2rem}
+#durum:empty{display:none}
 </style>
 </head>
 
@@ -118,7 +124,10 @@
     </div>
   </div>
 
-  <p id="bos">Bu mesaja uyan bir kayıt yok. Hatanın tamamını <a href="mailto:lyda@lyda.info">bana gönder</a>, ekleyeyim.</p>
+  <div aria-live="polite">
+    <p id="durum"></p>
+    <p id="bos">Bu mesaja uyan bir kayıt yok. Hatanın tamamını <a href="mailto:lyda@lyda.info">bana gönder</a>, ekleyeyim.</p>
+  </div>
 
   <!-- ============ BELLEK ============ -->
   <section class="bolum" data-tur="bellek">
@@ -363,35 +372,87 @@
   var arama = document.getElementById("arama");
   var temizle = document.getElementById("temizle");
   var bos = document.getElementById("bos");
+  var durum = document.getElementById("durum");
   var bolumler = Array.prototype.slice.call(document.querySelectorAll(".bolum"));
   var etiketler = Array.prototype.slice.call(document.querySelectorAll(".secenek"));
   var secili = "hepsi";
 
+  // "tr" küçültme "İ"yi doğru çevirir ama İngilizce "Input"u "ınput" yapar;
+  // ı'yı i'ye katlayınca iki yazım da birbirini bulur
+  function sadelestir(s) {
+    return s.toLocaleLowerCase("tr").replace(/ı/g, "i");
+  }
+
+  // Yapıştırılan tam hata mesajını kelimelere böl; kısa parçalar ve sayılar
+  // ("2.00 GiB" gibi) her kayıtta değişir, eşleşmeye katılmaz
+  function kelimeler(sorgu) {
+    var sonuc = [];
+    sorgu.split(/[^a-z0-9çğöşü_]+/).forEach(function (k) {
+      if (k.length >= 3 && sonuc.indexOf(k) === -1) sonuc.push(k);
+    });
+    return sonuc;
+  }
+
   var kayitlar = [];
   bolumler.forEach(function (bolum) {
     Array.prototype.forEach.call(bolum.querySelectorAll(".hata"), function (el) {
-      kayitlar.push({ el: el, bolum: bolum, metin: el.textContent.toLocaleLowerCase("tr") });
+      kayitlar.push({
+        el: el,
+        bolum: bolum,
+        metin: sadelestir(el.textContent),
+        // Kelime puanı yalnız mesajın kendisine bakar; Türkçe açıklamaya
+        // bakınca "bir", "için" gibi kelimeler alakasız kayıt getiriyordu
+        mesaj: sadelestir(el.querySelector(".hata-mesaj").textContent)
+      });
     });
   });
 
   function suz() {
-    var sorgu = arama.value.trim().toLocaleLowerCase("tr");
+    var sorgu = sadelestir(arama.value.trim());
     temizle.style.display = sorgu ? "block" : "none";
-    var bulunan = 0;
+
+    var adaylar = kayitlar.filter(function (k) {
+      return secili === "hepsi" || k.bolum.dataset.tur === secili;
+    });
+    var gosterilen = adaylar.filter(function (k) {
+      return !sorgu || k.metin.indexOf(sorgu) !== -1;
+    });
+
+    // Birebir eşleşme yoksa (kayıtlarda "…" yer tutucuları var) en çok
+    // kelimesi tutan kayıtları göster
+    var yakin = false;
+    var parcalar = kelimeler(sorgu);
+    if (sorgu && !gosterilen.length && parcalar.length >= 2) {
+      var enIyi = 0;
+      var puanlar = adaylar.map(function (k) {
+        var puan = 0;
+        parcalar.forEach(function (p) {
+          if (k.mesaj.indexOf(p) !== -1) puan++;
+        });
+        if (puan > enIyi) enIyi = puan;
+        return puan;
+      });
+      if (enIyi >= 2) {
+        gosterilen = adaylar.filter(function (k, i) { return puanlar[i] === enIyi; });
+        yakin = true;
+      }
+    }
 
     kayitlar.forEach(function (k) {
-      var turUyar = secili === "hepsi" || k.bolum.dataset.tur === secili;
-      var metinUyar = !sorgu || k.metin.indexOf(sorgu) !== -1;
-      var goster = turUyar && metinUyar;
-      k.el.classList.toggle("gizli", !goster);
-      if (goster) bulunan++;
+      k.el.classList.toggle("gizli", gosterilen.indexOf(k) === -1);
     });
 
     bolumler.forEach(function (b) {
       b.classList.toggle("gizli", b.querySelectorAll(".hata:not(.gizli)").length === 0);
     });
 
+    var bulunan = gosterilen.length;
     bos.style.display = bulunan ? "none" : "block";
+    if (yakin) {
+      durum.textContent = "Birebir eşleşme yok. En yakın " + bulunan + " kayıt:";
+    } else {
+      durum.textContent = bulunan && (sorgu || secili !== "hepsi") ? bulunan + " kayıt" : "";
+    }
   }
 
   arama.addEventListener("input", suz);

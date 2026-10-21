@@ -102,7 +102,11 @@ Bilinen CSS incelikleri — bozmadan önce nedenini bil:
   sırasında kaybediyor ve kablo noktaları yanlarda kalıyor.
 - `@view-transition { navigation: auto }` sayfalar arası geçiş için — yalnız
   Chrome/Edge'de çalışır, diğerlerinde sessizce düşer.
-- Türkçe arama her yerde `toLocaleLowerCase("tr")` ile ("İ" sorunu).
+- Türkçe arama her yerde `toLocaleLowerCase("tr")` + `.replace(/ı/g,"i")` ile
+  (`sadelestir()`). Yalnız "tr" küçültme "İ"yi çözer ama "CLIP"i "clıp" yapıp
+  İngilizce terimleri bulunmaz kılıyordu; iki tarafı da katlamak ikisini çözer.
+- Hata sözlüğü birebir eşleşme bulamazsa sorguyu kelimelere bölüp en çok
+  kelimesi tutan kayıtları gösteriyor (tam hata mesajı yapıştırılınca).
 - `prefers-reduced-motion` altında bütün animasyonlar sıfırlanıyor; yeni
   animasyon eklersen oraya da ekle.
 
